@@ -1,0 +1,7 @@
+#!/bin/bash
+# Run this to compile to production.
+
+(
+	echo -e '$production: true;\n'
+	cat style.scss
+) | scss -t compact --sourcemap=none -s build/reddit-theme.css
