@@ -1,0 +1,881 @@
+// /r/KotakuInAction CSS v0.1 by spooc
+$version: "1.0";
+
+$production: false !default !global;
+
+@function asset_url($asset_id, $extension) {
+  @if ($production == true) {
+    @return '%%' + $asset_id + '%%';
+  } @else {
+    @return 'assets/' + $asset_id + '.' + $extension;
+  }
+}
+
+// Assets.
+$asset_icon_main_cntrv: asset_url('icon-main-cntrv', 'png');
+$asset_icon_main_glided: asset_url('icon-main-glided', 'png');
+$asset_icon_main_hot: asset_url('icon-main-hot', 'png');
+$asset_icon_main_new: asset_url('icon-main-new', 'png');
+$asset_icon_main_rising: asset_url('icon-main-rising', 'png');
+$asset_icon_main_top: asset_url('icon-main-top', 'png');
+$asset_logo: asset_url('logo', 'png');
+$asset_texture: asset_url('texture', 'png');
+$asset_vivian_search: asset_url('vivian-search', 'png');
+
+// Tag colors.
+$tag_color_unverified: #e01919;
+$tag_color_rumor: #000000;
+$tag_color_verified: #25c819;
+$tag_color_people: #1a80ed;
+$tag_color_happenings: #ed871a;
+$tag_color_ideas: #828282;
+$tag_color_goal: #aa10de;
+$tag_color_editorial: #dbc200;
+$tag_color_meta: #088a85;
+$tag_color_drama: #ff24c8;
+$tag_color_humor: #543e00;
+$tag_color_showerthought: #3be0f2;
+$tag_color_discussion: #1c9328;
+$tag_color_off_topic: #5600bf;
+$tag_color_ethics: #9e0000;
+$tag_color_industry: #b1af9c;
+
+$side_header_color: #888;
+$side_header_font_size: 16px;
+
+// Mixin for reddit site content.
+// We tone this content down with dark colors to remove distractions.
+@mixin reddit-site {
+  color: #eee;
+  background-color: #333;
+  border-color: #aaa;
+}
+
+// Bootstrap flat button.
+@mixin btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  height: 18px;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+// Bootstrap flat primary button.
+@mixin btn-primary {
+  @include btn;
+
+  color: #fff;
+  background-color: #7a33b7;
+  border-color: #6d2ea4;
+
+  &:focus {
+    background-color: #602890;
+    border-color: #2b1240;
+  }
+  &:hover {
+    background-color: #602890;
+    border-color: #4d2074;
+  }
+  &:active {
+    background-color: #602890;
+    border-color: #4d2074;
+  }
+  &:active:hover, :active:focus {
+    background-color: #4d2074;
+    border-color: #2b1240;
+  }
+}
+
+// Bootstrap flat success button.
+@mixin btn-success {
+  @include btn;
+
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+
+  &:focus {
+    background-color: #449d44;
+    border-color: #255625;
+  }
+  &:hover {
+    background-color: #449d44;
+    border-color: #398439;
+  }
+  &:active {
+    background-color: #449d44;
+    border-color: #398439;
+  }
+  &:active:hover, :active:focus {
+    background-color: #398439;
+    border-color: #255625;
+  }
+}
+
+@mixin big-sidebar-btn {
+  width: (300px - 12 * 2);
+  font-size: 16px;
+  height: 29px;
+  background-image: none;
+  line-height: 29px;
+}
+
+// Brute force hiding of text.
+@mixin hide-text {
+  font-size: 0;
+  color: transparent;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+
+@mixin icon-30px($icon_url) {
+  @include hide-text;
+
+  background-image: url($icon_url);
+  background-repeat: no-repeat;
+  background-size: 28px;
+  background-position: 1px 1px;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  padding: 0px;
+}
+
+@-webkit-keyframes show_on_100 {
+  0% {
+    opacity: 0;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes show_on_100 {
+  0% {
+    opacity: 0;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@mixin tooltip($text) {
+  position: relative;
+
+  &:after {
+    content: $text;
+    padding: 2px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 25%;
+    font-weight: normal;
+    background-color: #fef4c5;
+    border: 1px solid #d4b943;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    z-index: 1000;
+  }
+  &:hover:after {
+    display: inline-block;
+
+    -webkit-animation: show_on_100 0.8s forwards;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-delay: 0s;
+    animation: show_on_100 0.8s forwards;
+    animation-iteration-count: 1;
+    animation-delay: 0s;
+  }
+}
+
+@mixin custom-markdown {
+  color: #333;
+
+  ul {
+    padding-left: 20px;
+  }
+
+  h1 {
+    font-size: $side_header_font_size;
+    color: $side_header_color;
+    margin-top: 10px;
+    margin-bottom: 2px;
+  }
+
+  // FIRST BLOCKQUOTE with ul list is dropdown of filters.
+  // Move the dropdown list to top bar next to 'wiki'.
+  blockquote:nth-child(1) ul {
+    display: block;
+    position: absolute;
+    z-index: 1000;
+    border: none;
+    top: (20px + 120px + 34px);
+    left: (61px + (32px + 6px) * 6 + (24px + 13px * 2 + 28px));
+
+    &:hover > li {
+      display: block;
+    }
+    > li {
+      display: block;
+    }
+    > li:first-child {
+      @include btn-primary;
+    }
+    > li + li {
+      display: none;
+      width: 75px;
+      padding: 4px 8px 4px 8px;
+      margin: 0px;
+      background-color: #ffffff;
+      border: 0px 1px 0px 1px solid #cccccc;
+      -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+
+      a[href$=uv] {
+        @include std-link-flair($tag_color_unverified);
+      }
+      a[href$=ru] {
+        @include std-link-flair($tag_color_rumor);
+      }
+      a[href$=vf] {
+        @include std-link-flair($tag_color_verified);
+      }
+      a[href$=pe] {
+        @include std-link-flair($tag_color_people);
+      }
+      a[href$=ha] {
+        @include std-link-flair($tag_color_happenings);
+      }
+      a[href$=id] {
+        @include std-link-flair($tag_color_ideas);
+      }
+      a[href$=bc] {
+        @include std-link-flair($tag_color_goal);
+      }
+      a[href$=ed] {
+        @include std-link-flair($tag_color_editorial);
+      }
+      a[href$=mt] {
+        @include std-link-flair($tag_color_meta);
+      }
+      a[href$=dr] {
+        @include std-link-flair($tag_color_drama);
+      }
+      a[href$=hu] {
+        @include std-link-flair($tag_color_humor);
+      }
+      a[href$=st] {
+        @include showerthought-flair;
+      }
+      a[href$=ds] {
+        @include std-link-flair($tag_color_discussion);
+      }
+      a[href$=ot] {
+        @include std-link-flair($tag_color_off_topic);
+      }
+      a[href$=et] {
+        @include std-link-flair($tag_color_ethics);
+      }
+      a[href$=in] {
+        @include std-link-flair($tag_color_industry);
+      }
+    }
+    > li:nth-child(2) {
+      border-radius: 4px 4px 0px 0px;
+      padding-top: 8px;
+    }
+    > li:last-child {
+      border-radius: 0px 0px 4px 4px;
+      padding-bottom: 8px;
+    }
+  }
+
+  // SECOND H3 is header link list.
+  h3:nth-child(2) {
+    display: block;
+    position: absolute;
+    z-index: 1000;
+    border: none;
+    margin: 5px 0px;
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    top: (20px + 120px - 4px);
+    left: (61px);
+    color: #aaa;
+    font-weight: normal;
+
+    a {
+      color: #fff;
+      font-weight: normal;
+    }
+  }
+}
+
+@mixin content-title {
+  > a:first-child {
+    // Has no category yet, show temporary flair.
+    &::before {
+      @include std-link-flair(#b0b0b0);
+      font-size: 10px;
+      content: 'NO TAG';
+    }
+  }
+  .linkflairlabel {
+    font-size: 10px;
+
+    &[title=UNVERIFIED] {
+      @include std-link-flair($tag_color_unverified);
+    }
+    &[title=RUMOR] {
+      @include std-link-flair($tag_color_rumor);
+    }
+    &[title=VERIFIED] {
+      @include std-link-flair($tag_color_verified);
+    }
+    &[title=PEOPLE] {
+      @include std-link-flair($tag_color_people);
+    }
+    &[title=HAPPENINGS] {
+      @include std-link-flair($tag_color_happenings);
+    }
+    &[title=IDEAS] {
+      @include std-link-flair($tag_color_ideas);
+    }
+    &[title=GOAL] {
+      @include std-link-flair($tag_color_goal);
+    }
+    &[title=EDITORIAL] {
+      @include std-link-flair($tag_color_editorial);
+    }
+    &[title=META] {
+      @include std-link-flair($tag_color_meta);
+    }
+    &[title=DRAMA] {
+      @include std-link-flair($tag_color_drama);
+    }
+    &[title=HUMOR] {
+      @include std-link-flair($tag_color_humor);
+    }
+    &[title=SHOWERTHOUGHT] {
+      @include showerthought-flair;
+    }
+    &[title=DISCUSSION] {
+      @include std-link-flair($tag_color_discussion);
+    }
+    &[title=OFF-TOPIC] {
+      @include std-link-flair($tag_color_off_topic);
+    }
+    &[title=ETHICS] {
+      @include std-link-flair($tag_color_ethics);
+    }
+    &[title=INDUSTRY] {
+      @include std-link-flair($tag_color_industry);
+    }
+  }
+}
+
+// Standard link flairs have fixed lengths.
+@mixin std-link-flair($color) {
+  font-size: 10px;
+  background-color: $color;
+  color: #fff;
+  text-align: center;
+  display: inline-block;
+  width: 70px;
+  padding: 1px;
+  max-width: inherit;
+  max-height: 15px;
+  border: 1px solid #ddd;
+  border-radius: 0px;
+  margin-right: 5px;
+}
+
+// This flair has hack that shortens the excessive length.
+@mixin showerthought-flair {
+  @include std-link-flair($tag_color_showerthought);
+
+  // Tag is too long, shorten it.
+  font-size: 0px;
+  &::after {
+    content: 'SHOWERTH.';
+    font-size: 10px;
+  }
+}
+
+// This fixes some issues with reddit companion.
+html {
+	position: relative;
+}
+
+// Header image and area.
+#header {
+  // Gap to show background texture.
+  height: 20px;
+  background-color: transparent;
+  border: none;
+  margin-bottom: (160px + 34px);
+
+  #sr-header-area {
+	font-size: 10px;
+    @include reddit-site;
+    a, span {
+      @include reddit-site;
+    }
+  }
+
+  #header-bottom-left {
+    padding-top: 120px;
+    width: 358px;
+
+    // Hide the element actually intended for the subreddit logo
+    // as it links to reddit front page instead of the subreddit.
+    > #header-img-a, > #header-img {
+      display: none;
+    }
+
+    // The reddit name element is used for the logo.
+    // An logo asset is used instead which should be changed at will, manually.
+    > span.redditname {
+      display: block;
+
+      > a {
+        display: block;
+        position: absolute;
+        top: 19px;
+        left: 40px;
+        height: (-19px + 167px - 35px);
+        width: 320px;
+
+        // We hide the text.
+        font-size: 0px;
+
+        // Show the logo instead. Scale it to a height of 300px.
+        background-image: url($asset_logo);
+        background-repeat: no-repeat;
+        background-position: top-right;
+        background-size: 300px;
+        background-color: transparent;
+      }
+    }
+
+    // Main rank mode menu (hot, new, rising...)
+    ul.tabmenu {
+      position: absolute;
+      display: block;
+      background-color: #000;
+      background-color: rgba(0, 0, 0, 0.2);
+      top: 167px;
+      right: 320px;
+      left: 0px;
+      height: 36px;
+      margin: 0px;
+      padding: 7px 4px 4px 61px;
+      overflow: hidden;
+
+      li {
+        font-weight: normal;
+        display: inline-block;
+        margin: 0px 6px 0px 0px;
+      }
+      li a {
+        @include btn-primary;
+      }
+      li.selected a {
+        @extend a:active;
+      }
+      li:nth-child(1) {
+        a {
+          @include icon-30px($asset_icon_main_hot);
+        }
+        @include tooltip('Display hot (popular) links.');
+      }
+      li:nth-child(2) {
+        a {
+          @include icon-30px($asset_icon_main_new);
+        }
+        @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
+      }
+      li:nth-child(3) {
+        a {
+          @include icon-30px($asset_icon_main_rising);
+        }
+        @include tooltip('Display rising links.');
+      }
+      li:nth-child(4) {
+        a {
+          @include icon-30px($asset_icon_main_top);
+        }
+        @include tooltip('Display top links.');
+      }
+      li:nth-child(5) {
+        a {
+          @include icon-30px($asset_icon_main_cntrv);
+        }
+        @include tooltip('Display controversial links.');
+      }
+      li:nth-child(6) {
+        a {
+          @include icon-30px($asset_icon_main_glided);
+        }
+        @include tooltip('Display glided comments.');
+      }
+      // Wiki
+      li:nth-child(7) {
+        margin-left: 5px;
+      }
+      // Hide promoted, it's not like the admins allow any promoted links here anyway.
+      li:nth-child(8) {
+        display: none;
+      }
+    }
+  }
+
+  // Move user box up into subreddit area to get it out of the way.
+  #header-bottom-right {
+    position: absolute;
+    top: 0px;
+    height: 14px;
+    padding: 2px 4px 2px 16px;
+
+	font-size: 10px;
+    color: #eee;
+    background-color: #333;
+    border-color: #aaa;
+
+    a, span {
+      color: #aaa;
+    }
+  }
+  #header-bottom-right::before {
+    content: "| ";
+    color: #aaa;
+  }
+}
+
+* {
+  // Nuke modified letter spacing that makes text unreadable.
+  letter-spacing: 0px !important;
+}
+
+body {
+  // We don't support smaller resolutions than 800x600.
+  // This is the limitations of the design/layout. One does not simply make a CSS Theme that magically
+  // makes a site responsive. You have to build the site from the ground up for that.
+  min-width: 800px;
+
+  // Prevent absolute positioning from leaking to the window.
+  position: relative;
+
+  // Default reddit font (Verdana) makes your eyes bleed.
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  // Larger default font size for readability and it looks more modern. People have large resolutions today.
+  font-size: 14px;
+  line-height: normal;
+  color: #333;
+  background-color: #fff;
+
+  // Background texture.
+  background-image: url($asset_texture);
+  background-repeat: repeat;
+  background-color: #000;
+  background-size: 40%;
+}
+
+div.side {
+  margin: 0px;
+  padding: 10px;
+  font-size: 12px;
+  border-color: #f4f4f4;
+  border-width: 0px 0px 10px 10px;
+  border-style: solid;
+
+  // Remove ugly borders.
+  .sidecontentbox .content {
+    border-style: none;
+  }
+
+  // Remove ugly hr lines but keep them as separators.
+  hr {
+    background: transparent;
+  }
+
+  // Consistent headers with markdown.
+  h1 {
+    font-size: $side_header_font_size;
+    color: $side_header_color;
+  }
+
+  // Search spacer.
+  div.spacer:nth-child(1) {
+    width: 0px;
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+
+    // Move search up into header.
+    form#search {
+      position: absolute;
+      top: 75px;
+      right: 135px;
+      padding-left: 20px;
+      z-index: 1;
+
+      input[type=text] {
+        border-radius: 10px;
+        width: 175px;
+      }
+    }
+  }
+
+  // Sponsourship box.
+  div.spacer:nth-child(2) {
+    margin: 0px;
+  }
+
+  // New link spacer.
+  div.spacer:nth-child(3) {
+    margin: 0px;
+
+    // We utilize this spacer to move sidebar into header since this is a waste of space and it helps clip Vivian.
+    background-color: #fff;
+    position: relative;
+    margin-top: -(7px + 36px + 4px) - 10px;
+    margin-left: -10px;
+    padding: 10px 10px 0px 10px;
+    width: 300px;
+
+    // We convert this to a nice button instead of ugly arrow.
+    div.submit-link div.morelink {
+      border-style: none;
+      background-image: none;
+      background-color: transparent;
+      text-align: inherit;
+      width: 100%;
+      height: auto;
+
+      a {
+        @include btn-primary;
+        @include big-sidebar-btn;
+
+        &::after {
+          color: white;
+          font-size: 16px;
+          content: ' or post';
+        }
+      }
+      div.nub {
+        display: none;
+      }
+    }
+
+    &::after {
+      content: 'Note that your account must be older than 3 days. Read the rules before posting. Your post may be deleted automatically if it breaks one or more rules.';
+      display: none;
+    }
+    &:hover::after {
+      display: block;
+    }
+  }
+
+  // New text-post spacer.
+  div.spacer:nth-child(4) {
+    // Just takes up space, let user choose post type in dialog instead.
+    display: none;
+  }
+
+  // Subreddit general sidebar spacer (with custom stuff).
+  div.spacer:nth-child(5)  {
+    .titlebox {
+      h1.redditname {
+        // Just takes up space. People know this is KotakuInAction.
+        display: none;
+      }
+      // Subscribe button.
+      span.subscribe-button a.add {
+        @include btn-success;
+        @include big-sidebar-btn;
+        font-size: 0px;
+
+        &::before {
+          content: 'Subscribe to /r/KotakuInAction';
+          font-size: 16px;
+        }
+      }
+      // Subscribers counts.
+      span.subscribers {
+        span.number {
+          &::after {
+            content: ' ethical violations.';
+          }
+        }
+        span.word {
+          display: none;
+        }
+      }
+      p.users-online {
+        &::before {
+          // Hide ugly green circle.
+          display: none;
+        }
+        span.number {
+          &::after {
+            content: ' navy sealions here, kiddo.';
+          }
+        }
+        .word {
+          display: none;
+        }
+      }
+      // Entering custom markdown.
+      form.usertext > div.usertext-body > div.md {
+        @include custom-markdown;
+      }
+    }
+  }
+
+  // Moderation tools.
+  div.spacer:nth-child(6) {
+
+  }
+
+  // Reddit ad.
+  div.spacer:nth-child(7) {
+
+  }
+
+  // Create your own subreddit.
+  div.spacer:nth-child(8) {
+    // Just takes up space, useless for 99% of users.
+    display: none;
+  }
+
+  // Moderators list.
+  div.spacer:nth-child(9) {
+
+  }
+
+  // Recently viewed links.
+  div.spacer:nth-child(10) {
+    // Just takes up space, useless for 99% of users.
+    display: none;
+  }
+
+  // Account activity.
+  div.spacer:nth-child(11) {
+    // Just takes up space, useless for 99% of users.
+    display: none;
+  }
+}
+
+div.content {
+  background-color: #fff;
+  margin: 0px;
+  padding: 0px;
+
+  -webkit-box-shadow: 0px 19px 25px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow:    0px 19px 25px 0px rgba(0, 0, 0, 0.5);
+  box-shadow:         0px 19px 25px 0px rgba(0, 0, 0, 0.5);
+
+  > div#siteTable {
+    > div.thing {
+      padding: 8px 20px;
+      margin: 0px;
+
+      > .rank {
+        // Hide link rank. For 99% of users this information is useless.
+        display: none;
+      }
+      > .midcol {
+        margin: 0px 20px 0px 0px;
+      }
+      > div.entry {
+        > p.title {
+          @include content-title;
+
+          > span.domain {
+            color: #aaa;
+            a {
+              color: #aaa;
+            }
+          }
+        }
+        > p.tagline {
+          color: #aaa;
+        }
+        /* make action links much more compact and highlight comment */
+        > ul.flat-list {
+          li {
+            padding: 1px;
+            font-size: 10px;
+            a {
+              color: #aaa;
+              font-weight: normal;
+              line-height: normal;
+            }
+          }
+          li.first {
+            padding-left: 0px;
+            a {
+              font-size: 12px;
+              color: #333;
+            }
+            &::after {
+              content: ' ';
+              padding-left: 5px;
+            }
+          }
+        }
+      }
+    }
+    > .even {
+      background-color: #f4f4f4;
+    }
+  }
+}
+
+// Footer
+.footer-parent {
+  // Vivian search picture.
+  // Placed here for low z-index.
+  &::before {
+    position: absolute;
+    width: 200px;
+    height: 167px;
+    right: 0px;
+    top: 0px;
+    background-image: url($asset_vivian_search);
+    background-size: 180px;
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    content: '';
+  }
+
+  .footer {
+    @include reddit-site;
+    a, span {
+      @include reddit-site;
+    }
+  }
+}
