@@ -11,7 +11,7 @@ $production: false !default !global;
   }
 }
 
-// Assets.
+// ********* Assets. ********* //
 $asset_icon_main_cntrv: asset_url('icon-main-cntrv', 'png');
 $asset_icon_main_glided: asset_url('icon-main-glided', 'png');
 $asset_icon_main_hot: asset_url('icon-main-hot', 'png');
@@ -22,7 +22,36 @@ $asset_logo: asset_url('logo', 'png');
 $asset_texture: asset_url('texture', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
 
-// Tag colors.
+// ********* Typography configuration. ********* //
+$font-size-general: 14px; // General font size. Larger for readability. People have large resolutions today.
+$font-size-btn: 14px;     // Button font sizes.
+$font-size-blur: 10px;    // Small font size for text that should not be in focus
+                          // and is very likely to not be interesting for user.
+
+// ********* Size configuration. ********* //
+$full_min_width: 800px;   // Minimum width screen we support without scrollbar.
+$left-gutter-width: 60px; // The left gutter is where the upvotes and downvotes are.
+                          // This is the first clear "column" in the grid.
+
+$srarea-height: 18px;     // Subreddit area height. The first row.
+$logoarea-height: 120px;  // Logo area height. The second row.
+$logoarea-vpadding: 20px; // How much vertical paddning there should be around the logo.
+
+$linkbar-height: 30px;    // Linkbar area height. The third row.
+$linkbar-top: ($srarea-height + $logoarea-height);
+
+$sidebar-padding: 10px;
+$sidebar-inner-width: 300px;
+$sidebar-top: ($linkbar-top + $linkbar-height);
+$sidebar-width: ($sidebar-padding * 2 + $sidebar-inner-width);
+
+$tabmenu-inner-height: 30px;
+$tabmenu-pad: 7px;
+$tabmenu-height: ($tabmenu-pad + $tabmenu-inner-height + $tabmenu-pad);
+$tabmenu-min-width: ($full_min_width - $sidebar-width);
+$tabmenu-tag-filter-btn-width: 105px; // First button in tabmenu.
+
+// ********* Tag color configuration. ********* //
 $tag_color_unverified: #e01919;
 $tag_color_rumor: #000000;
 $tag_color_verified: #25c819;
@@ -52,20 +81,22 @@ $side_header_font_size: 16px;
 }
 
 // Bootstrap flat button.
+$btn-border: 1px;
+$btn-padding: 12px;
 @mixin btn {
   display: inline-block;
-  padding: 6px 12px;
+  padding: ($btn-padding / 2) $btn-padding;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: $font-size-btn;
   font-weight: normal;
-  height: 18px;
+  height: auto;
   line-height: normal;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
   background-image: none;
-  border: 1px solid transparent;
+  border: $btn-border solid transparent;
   border-radius: 4px;
 }
 
@@ -137,16 +168,16 @@ $side_header_font_size: 16px;
   overflow: hidden;
 }
 
-@mixin icon-30px($icon_url) {
+@mixin icon-tabmenu($icon_url) {
   @include hide-text;
 
   background-image: url($icon_url);
   background-repeat: no-repeat;
-  background-size: 28px;
-  background-position: 1px 1px;
+  background-size: $tabmenu-inner-height - $btn-border * 4;
+  background-position: $btn-border $btn-border;
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: $tabmenu-inner-height - $btn-border * 2;
+  height: $tabmenu-inner-height - $btn-border * 2;
   padding: 0px;
 }
 
@@ -183,6 +214,8 @@ $side_header_font_size: 16px;
     position: absolute;
     top: 100%;
     left: 25%;
+    font-size: $font-size-general;
+    line-height: $font-size-general;
     font-weight: normal;
     background-color: #fef4c5;
     border: 1px solid #d4b943;
@@ -190,7 +223,6 @@ $side_header_font_size: 16px;
     -webkit-border-radius: 2px;
     -ms-border-radius: 2px;
     border-radius: 2px;
-    z-index: 1000;
   }
   &:hover:after {
     display: inline-block;
@@ -225,8 +257,10 @@ $side_header_font_size: 16px;
     position: absolute;
     z-index: 1000;
     border: none;
-    top: (20px + 120px + 34px);
-    left: (61px + (32px + 6px) * 6 + (24px + 13px * 2 + 28px));
+    top: ($sidebar-top + $tabmenu-pad);
+    left: $left-gutter-width;
+    width: $tabmenu-tag-filter-btn-width;
+    padding: 0px;
 
     &:hover > li {
       display: block;
@@ -236,6 +270,7 @@ $side_header_font_size: 16px;
     }
     > li:first-child {
       @include btn-primary;
+      width: $tabmenu-tag-filter-btn-width - $btn-padding * 2;
     }
     > li + li {
       display: none;
@@ -308,20 +343,20 @@ $side_header_font_size: 16px;
     }
   }
 
-  // SECOND H3 is header link list.
+  // SECOND H3 is the linkbar.
   h3:nth-child(2) {
     display: block;
     position: absolute;
     z-index: 1000;
     border: none;
     margin: 5px 0px;
-    height: 20px;
-    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    top: (20px + 120px - 4px);
-    left: (61px);
+    height: $linkbar-height;
+    top: $linkbar-top;
+    left: $left-gutter-width;
+    right: 0px;
     color: #aaa;
     font-weight: normal;
 
@@ -430,14 +465,18 @@ html {
 
 // Header image and area.
 #header {
-  // Gap to show background texture.
-  height: 20px;
   background-color: transparent;
   border: none;
-  margin-bottom: (160px + 34px);
+  // The header pushes the main content and sidebar down under the tabmenu with bottom margin.
+  // The reason why the height is not used is because it would otherwise cover the search field.
+  // The sidebar is then pushed up the same distance with the magic of negative margins
+  // to place itself to the right of the tabmenu.
+  margin-bottom: $sidebar-top + $tabmenu-height;
+  height: 0px;
 
   #sr-header-area {
-	font-size: 10px;
+	font-size: $font-size-blur;
+	line-height: $srarea-height;
     @include reddit-site;
     a, span {
       @include reddit-site;
@@ -445,8 +484,12 @@ html {
   }
 
   #header-bottom-left {
-    padding-top: 120px;
-    width: 358px;
+    // We cannot let this element cover the entire page as it would otherwise cover the search
+    // field in lower resolutions, so we make it the maximum possible size instead.
+    width: ($tabmenu-min-width - $left-gutter-width);
+    height: $logoarea-height;
+    margin-left: $left-gutter-width;
+    line-height: 0px;
 
     // Hide the element actually intended for the subreddit logo
     // as it links to reddit front page instead of the subreddit.
@@ -458,23 +501,21 @@ html {
     // An logo asset is used instead which should be changed at will, manually.
     > span.redditname {
       display: block;
+      margin: 0px;
 
       > a {
         display: block;
-        position: absolute;
-        top: 19px;
-        left: 40px;
-        height: (-19px + 167px - 35px);
-        width: 320px;
+        height: $logoarea-height;
+        width: $tabmenu-min-width;
 
         // We hide the text.
         font-size: 0px;
 
-        // Show the logo instead. Scale it to a height of 300px.
+        // Show the logo instead. Scale it to a height that fills the entire logo area height.
         background-image: url($asset_logo);
         background-repeat: no-repeat;
-        background-position: top-right;
-        background-size: 300px;
+        background-position: 0px $logoarea-vpadding;
+        background-size: auto ($logoarea-height - $logoarea-vpadding * 2);
         background-color: transparent;
       }
     }
@@ -485,18 +526,27 @@ html {
       display: block;
       background-color: #000;
       background-color: rgba(0, 0, 0, 0.2);
-      top: 167px;
-      right: 320px;
+      top: $sidebar-top;
+      right: $sidebar-width;
       left: 0px;
-      height: 36px;
+      height: $tabmenu-inner-height;
       margin: 0px;
-      padding: 7px 4px 4px 61px;
-      overflow: hidden;
+      padding: $tabmenu-pad;
+      // Leave room on the left for gutter and filter button.
+      // We place the filter button on the left so new buttons can be added here by RES.
+      padding-left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $tabmenu-pad * 2);
+      // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
+      // buttons is inserted (e.g. RES) and screen is too small, but this will break tooltips.
+      // We need to prevent this in some other way...
+      overflow: visible;
+
+      // Required to prevent space between li to add extra margin.
+      font-size: 0px;
 
       li {
         font-weight: normal;
         display: inline-block;
-        margin: 0px 6px 0px 0px;
+        margin: 0px $tabmenu-pad 0px 0px;
       }
       li a {
         @include btn-primary;
@@ -506,43 +556,44 @@ html {
       }
       li:nth-child(1) {
         a {
-          @include icon-30px($asset_icon_main_hot);
+          @include icon-tabmenu($asset_icon_main_hot);
         }
         @include tooltip('Display hot (popular) links.');
       }
       li:nth-child(2) {
         a {
-          @include icon-30px($asset_icon_main_new);
+          @include icon-tabmenu($asset_icon_main_new);
         }
         @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
       }
       li:nth-child(3) {
         a {
-          @include icon-30px($asset_icon_main_rising);
+          @include icon-tabmenu($asset_icon_main_rising);
         }
         @include tooltip('Display rising links.');
       }
       li:nth-child(4) {
         a {
-          @include icon-30px($asset_icon_main_top);
+          @include icon-tabmenu($asset_icon_main_top);
         }
         @include tooltip('Display top links.');
       }
       li:nth-child(5) {
         a {
-          @include icon-30px($asset_icon_main_cntrv);
+          @include icon-tabmenu($asset_icon_main_cntrv);
         }
         @include tooltip('Display controversial links.');
       }
       li:nth-child(6) {
         a {
-          @include icon-30px($asset_icon_main_glided);
+          @include icon-tabmenu($asset_icon_main_glided);
         }
         @include tooltip('Display glided comments.');
       }
       // Wiki
       li:nth-child(7) {
-        margin-left: 5px;
+        // Separate wiki button with 2 units of padding.
+        margin-left: $tabmenu-pad;
       }
       // Hide promoted, it's not like the admins allow any promoted links here anyway.
       li:nth-child(8) {
@@ -555,10 +606,11 @@ html {
   #header-bottom-right {
     position: absolute;
     top: 0px;
-    height: 14px;
-    padding: 2px 4px 2px 16px;
+    height: $srarea-height;
+    line-height: $srarea-height;
+    padding: 0px 4px 0px 16px;
 
-	font-size: 10px;
+	font-size: $font-size-blur;
     color: #eee;
     background-color: #333;
     border-color: #aaa;
@@ -590,8 +642,7 @@ body {
   // Default reddit font (Verdana) makes your eyes bleed.
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  // Larger default font size for readability and it looks more modern. People have large resolutions today.
-  font-size: 14px;
+  font-size: $font-size-general;
   line-height: normal;
   color: #333;
   background-color: #fff;
@@ -605,11 +656,14 @@ body {
 
 div.side {
   margin: 0px;
-  padding: 10px;
-  font-size: 12px;
+  padding: $sidebar-padding;
+  width: $sidebar-inner-width;
+
   border-color: #f4f4f4;
-  border-width: 0px 0px 10px 10px;
+  border-width: 0px 0px $sidebar-padding $sidebar-padding;
   border-style: solid;
+
+  font-size: $font-size-general;
 
   // Remove ugly borders.
   .sidecontentbox .content {
@@ -627,44 +681,46 @@ div.side {
     color: $side_header_color;
   }
 
-  // Search spacer.
-  div.spacer:nth-child(1) {
-    width: 0px;
-    height: 0px;
-    padding: 0px;
-    margin: 0px;
+  &::before {
+    // We utilize the first spacer to move sidebar into header since
+    // this is a waste of space otherwise and it helps clip Vivian.
+    display: block;
+    background-color: #fff;
+    margin-top: -$tabmenu-height - $sidebar-padding;
+    margin-bottom: -$tabmenu-height + $sidebar-padding;
+    margin-left: -$sidebar-padding;
+    padding-left: $sidebar-padding;
+    padding-right: $sidebar-padding;
+    width: $sidebar-inner-width;
+    height: $tabmenu-height;
+    content: '';
+  }
 
-    // Move search up into header.
+
+  // Style for sidebar spacers and the content inside those spacers.
+  // The content of spacers varies depending on page/user etc and the order
+  // cannot be trusted, but we try to list the style rules for spacers in
+  // approximately the same order they usually appear in the sidebar for readability.
+  div.spacer {
+    // Make spacers insignificant so we can work with the content inside them.
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    // Search. Move into header.
     form#search {
       position: absolute;
-      top: 75px;
-      right: 135px;
+      top: ($sidebar-top / 2);
+      $search-width: 175px;
+      right: ($sidebar-inner-width + $sidebar-padding - $search-width);
       padding-left: 20px;
       z-index: 1;
 
       input[type=text] {
         border-radius: 10px;
-        width: 175px;
+        width: $search-width;
       }
     }
-  }
-
-  // Sponsourship box.
-  div.spacer:nth-child(2) {
-    margin: 0px;
-  }
-
-  // New link spacer.
-  div.spacer:nth-child(3) {
-    margin: 0px;
-
-    // We utilize this spacer to move sidebar into header since this is a waste of space and it helps clip Vivian.
-    background-color: #fff;
-    position: relative;
-    margin-top: -(7px + 36px + 4px) - 10px;
-    margin-left: -10px;
-    padding: 10px 10px 0px 10px;
-    width: 300px;
 
     // We convert this to a nice button instead of ugly arrow.
     div.submit-link div.morelink {
@@ -674,6 +730,7 @@ div.side {
       text-align: inherit;
       width: 100%;
       height: auto;
+      margin-bottom: $sidebar-padding;
 
       a {
         @include btn-primary;
@@ -688,26 +745,27 @@ div.side {
       div.nub {
         display: none;
       }
+
+      &::after {
+        content: 'Note that your account must be older than 3 days. Read the rules before posting. Your post may be deleted automatically if it breaks one or more rules.';
+        display: none;
+        font-size: $font-size-general;
+        margin-bottom: $sidebar-padding;
+        line-height: normal;
+        font-weight: normal;
+      }
+      &:hover::after {
+        display: block;
+      }
     }
 
-    &::after {
-      content: 'Note that your account must be older than 3 days. Read the rules before posting. Your post may be deleted automatically if it breaks one or more rules.';
+    // Hide text submit. We used combined button.
+    div.submit-text {
       display: none;
     }
-    &:hover::after {
-      display: block;
-    }
-  }
 
-  // New text-post spacer.
-  div.spacer:nth-child(4) {
-    // Just takes up space, let user choose post type in dialog instead.
-    display: none;
-  }
-
-  // Subreddit general sidebar spacer (with custom stuff).
-  div.spacer:nth-child(5)  {
-    .titlebox {
+    // General sidebar content.
+    div.titlebox {
       h1.redditname {
         // Just takes up space. People know this is KotakuInAction.
         display: none;
@@ -753,39 +811,23 @@ div.side {
         @include custom-markdown;
       }
     }
-  }
 
-  // Moderation tools.
-  div.spacer:nth-child(6) {
+    // Hide create your own subreddit, not interesting to 99% of users.
+    // There are plenty of ways to find this button.
+    div.create {
+      display: none;
+    }
 
-  }
-
-  // Reddit ad.
-  div.spacer:nth-child(7) {
-
-  }
-
-  // Create your own subreddit.
-  div.spacer:nth-child(8) {
-    // Just takes up space, useless for 99% of users.
-    display: none;
-  }
-
-  // Moderators list.
-  div.spacer:nth-child(9) {
-
-  }
-
-  // Recently viewed links.
-  div.spacer:nth-child(10) {
-    // Just takes up space, useless for 99% of users.
-    display: none;
-  }
-
-  // Account activity.
-  div.spacer:nth-child(11) {
-    // Just takes up space, useless for 99% of users.
-    display: none;
+    // The second last sidebar content should always be "RECENTLY VIEWED LINKS".
+    // Remove it as almost nobody is interested in it and it's just more clutter.
+    &:nth-last-child(2) > div.sidecontentbox {
+      > div.title {
+        display: none;
+      }
+      > ul:last-child {
+        display: none;
+      }
+    }
   }
 }
 
