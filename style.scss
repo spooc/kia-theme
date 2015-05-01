@@ -778,14 +778,29 @@ div.side {
         display: none;
       }
       // Subscribe button.
-      span.subscribe-button a.add {
-        @include btn-success;
-        @include big-sidebar-btn;
-        font-size: 0px;
+      span.subscribe-button {
+        display: block;
 
-        &::before {
-          content: 'Subscribe to /r/KotakuInAction';
-          font-size: 16px;
+        > a.remove {
+          display: none;
+
+          body.subscriber & {
+            display: inline;
+          }
+        }
+        > a.add {
+          @include btn-success;
+          @include big-sidebar-btn;
+          font-size: 0px;
+
+          &::before {
+            content: 'Subscribe to /r/KotakuInAction';
+            font-size: 16px;
+          }
+
+          body.subscriber & {
+            display: none;
+          }
         }
       }
       // Subscribers counts.
