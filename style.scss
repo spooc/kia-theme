@@ -227,10 +227,10 @@ $btn-padding: 12px;
   &:hover:after {
     display: inline-block;
 
-    -webkit-animation: show_on_100 0.8s forwards;
+    -webkit-animation: show_on_100 0.4s forwards;
     -webkit-animation-iteration-count: 1;
     -webkit-animation-delay: 0s;
-    animation: show_on_100 0.8s forwards;
+    animation: show_on_100 0.4s forwards;
     animation-iteration-count: 1;
     animation-delay: 0s;
   }
