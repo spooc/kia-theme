@@ -710,8 +710,9 @@ div.side {
     // Search. Move into header.
     form#search {
       position: absolute;
-      top: ($sidebar-top / 2);
       $search-width: 175px;
+      width: $search-width;
+      top: ($sidebar-top / 2);
       right: ($sidebar-inner-width + $sidebar-padding - $search-width);
       padding-left: 20px;
       z-index: 1;
@@ -719,6 +720,12 @@ div.side {
       input[type=text] {
         border-radius: 10px;
         width: $search-width;
+        background-color: #fff;
+        color: #000;
+      }
+      #searchexpando {
+        background-color: #fff;
+        border-color: #aaa;
       }
     }
 
