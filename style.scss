@@ -34,8 +34,8 @@ $left-gutter-width: 60px; // The left gutter is where the upvotes and downvotes 
                           // This is the first clear "column" in the grid.
 
 $srarea-height: 18px;     // Subreddit area height. The first row.
-$logoarea-height: 120px;  // Logo area height. The second row.
-$logoarea-vpadding: 20px; // How much vertical paddning there should be around the logo.
+$logoarea-height: 90px;   // Logo area height. The second row.
+$logoarea-vpadding: 7px;  // How much vertical paddning there should be around the logo.
 
 $linkbar-height: 30px;    // Linkbar area height. The third row.
 $linkbar-top: ($srarea-height + $logoarea-height);
@@ -524,8 +524,7 @@ html {
     ul.tabmenu {
       position: absolute;
       display: block;
-      background-color: #000;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: transparent;
       top: $sidebar-top;
       right: $sidebar-width;
       left: 0px;
@@ -710,9 +709,9 @@ div.side {
     // Search. Move into header.
     form#search {
       position: absolute;
-      $search-width: 175px;
+      $search-width: 200px;
       width: $search-width;
-      top: ($sidebar-top / 2);
+      top: ($sidebar-top / 2) - 10px;
       right: ($sidebar-inner-width + $sidebar-padding - $search-width);
       padding-left: 20px;
       z-index: 1;
@@ -925,15 +924,32 @@ div.content {
   // Placed here for low z-index.
   &::before {
     position: absolute;
-    width: 200px;
-    height: 167px;
+    width: $sidebar-width;
+    height: $sidebar-top;
     right: 0px;
     top: 0px;
     background-image: url($asset_vivian_search);
-    background-size: 180px;
+    background-size: $sidebar-top;
     background-repeat: no-repeat;
     background-position: bottom right;
     content: '';
+  }
+
+  // Tabmenu dark stripe.
+  // Placed here because not all pages contain a tabmenu.
+  &::after {
+      position: absolute;
+      display: block;
+      background-color: #000;
+      background-color: rgba(0, 0, 0, 0.2);
+      top: $sidebar-top;
+      right: 0px;
+      left: 0px;
+      height: $tabmenu-height;
+      margin: 0px;
+      padding: 0px;
+      content: '';
+      z-index: -1;
   }
 
   .footer {
