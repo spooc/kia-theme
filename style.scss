@@ -12,6 +12,7 @@ $production: false !default !global;
 }
 
 // ********* Assets. ********* //
+$asset_comment: asset_url('comment', 'png');
 $asset_icon_main_cntrv: asset_url('icon-main-cntrv', 'png');
 $asset_icon_main_glided: asset_url('icon-main-glided', 'png');
 $asset_icon_main_hot: asset_url('icon-main-hot', 'png');
@@ -32,7 +33,8 @@ $font-size-btn: 14px;     // Button font sizes.
 
 // ********* Color configuration. ********* //
 $color-focus-fill: #fff;
-$color-focus-bg: #f4f4f4;
+$color-focus-fill2: #f8f8f8;
+$color-focus-bg: #f8f8f8;
 $color-focus-fg: #333;
 $color-focus-border: #e2e2e2;
 
@@ -96,10 +98,16 @@ $side_header_font_size: 16px;
   text-transform: none;
 }
 
-@mixin reset-text-focus {
+@mixin font-focus {
   @include reset-text;
   color: $color-focus-fg;
   font-size: $font-size-focus;
+}
+
+@mixin font-blur {
+  @include reset-text;
+  color: $color-blur-fg;
+  font-size: $font-size-blur;
 }
 
 @mixin focus-box {
@@ -226,6 +234,14 @@ $btn-padding: 12px;
   }
 }
 
+// Bootstrap btn-sm.
+@mixin btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
 @mixin big-sidebar-btn {
   width: (300px - 12 * 2);
   font-size: 16px;
@@ -247,8 +263,8 @@ $btn-padding: 12px;
 
   background-image: url($icon_url);
   background-repeat: no-repeat;
-  background-size: $tabmenu-inner-height - $btn-border * 4;
-  background-position: $btn-border $btn-border;
+  background-size: $tabmenu-inner-height - $btn-border * 8;
+  background-position: ($btn-border * 3) ($btn-border * 3);
   display: inline-block;
   width: $tabmenu-inner-height - $btn-border * 2;
   height: $tabmenu-inner-height - $btn-border * 2;
@@ -312,7 +328,7 @@ $btn-padding: 12px;
 }
 
 @mixin custom-markdown {
-  color: #333;
+  @include font-focus;
 
   ul {
     padding-left: 20px;
@@ -468,6 +484,7 @@ $btn-padding: 12px;
   }
 }
 
+// TODO: These can be more generic.
 @mixin content-title {
   > a:first-child {
     // Has no category yet, show temporary flair.
@@ -556,6 +573,67 @@ $btn-padding: 12px;
   &::after {
     content: 'SHOWERTH.';
     font-size: 10px;
+  }
+}
+
+// General upvote/downvote style.
+.midcol {
+  > .score.likes {
+    color: $color-upvote;
+  }
+  > .score.dislikes {
+    color: $color-downvote;
+  }
+  div.upmod {
+    background-image: url($asset_vote_up);
+    background-position: 0px 0px;
+  }
+  div.downmod {
+    background-image: url($asset_vote_down);
+    background-position: 0px 0px;
+  }
+}
+
+// General thing style.
+div.thing {
+  div.entry {
+    > p.title {
+      > span.domain {
+        font-size: 0px;
+        a {
+          @include font-blur;
+          float: right;
+        }
+      }
+    }
+    > p.tagline {
+      @include font-blur;
+    }
+    // Make action list much more compact.
+    > ul.flat-list {
+      font-size: 0px;
+      li {
+        padding: 0px;
+        @include font-blur;
+        a {
+          @include font-blur;
+        }
+        &:nth-child(n + 2) {
+          padding-left: 6px;
+        }
+      }
+      a {
+        padding: 0px;
+      }
+      // Highlight comments link.
+      a.comments {
+        @include font-focus;
+      }
+      // Highlight reply link.
+      a[onclick^='return reply'] {
+        @include font-focus;
+      }
+    }
   }
 }
 
@@ -655,7 +733,7 @@ html {
       li.selected a {
         @extend a:active;
       }
-      body.listing-page & {
+      body.listing-page &, body.wiki-page & {
         li:nth-child(1) {
           a {
             @include icon-tabmenu($asset_icon_main_hot);
@@ -935,7 +1013,7 @@ div.side {
       }
       // Subscribers counts.
       span.subscribers {
-        @include reset-text-focus;
+        @include font-focus;
         @include focus-box;
         display: block;
         padding: $sidebar-padding;
@@ -957,7 +1035,7 @@ div.side {
         }
       }
       p.users-online {
-        @include reset-text-focus;
+        @include font-focus;
         @include focus-box;
         display: block;
         padding: $sidebar-padding;
@@ -1029,7 +1107,7 @@ div.side {
     // Style all sidecontent boxes focus boxes.
     div.sidecontentbox {
       @include focus-box;
-      @include reset-text-focus;
+      @include font-focus;
       padding: $sidebar-padding;
       margin-bottom: $sidebar-padding;
 
@@ -1118,10 +1196,14 @@ div.content[role=main] {
   }
 
   > div#siteTable {
+    > div.thing.even {
+      background-color: $color-focus-fill2;
+    }
     > div.thing {
       @include focus-box;
       padding: $sidebar-padding;
-      margin: 0px 0px $sidebar-padding 0px;
+      margin: 0px;
+      margin-bottom: -1px;
 
       > .rank {
         // Hide link rank. For 99% of users this information is useless.
@@ -1136,60 +1218,94 @@ div.content[role=main] {
         > div {
           margin: auto;
         }
-        > .score.likes {
-          color: $color-upvote;
-        }
-        > .score.dislikes {
-          color: $color-downvote;
-        }
-        div.upmod {
-          background-image: url($asset_vote_up);
-          background-position: 0px 0px;
-        }
-        div.downmod {
-          background-image: url($asset_vote_down);
-          background-position: 0px 0px;
-        }
       }
       > div.entry {
         margin: 0px;
-
         > p.title {
           @include content-title;
+        }
+      }
+    }
+  }
 
-          > span.domain {
-            color: #aaa;
-            a {
-              color: #aaa;
-            }
-          }
+  > div.commentarea {
+    padding: $sidebar-padding;
+
+    > * {
+      margin-left: 0px;
+    }
+
+    > div.panestack-title {
+      display: inline;
+      border-style: none;
+      margin: 0px;
+      padding-right: 15px;
+      span {
+        @include font-focus;
+      }
+    }
+
+    > div.menuarea {
+      display: inline;
+      margin: 0px;
+      > *, form {
+        display: inline;
+      }
+      .spacer {
+        margin: 0px;
+      }
+      .dropdown {
+        // Lol reddit bugfix.
+        cursor: pointer;
+      }
+      span, a {
+        @include font-focus;
+      }
+      a {
+        text-decoration: underline;
+      }
+      + * {
+        margin-top: $sidebar-padding;
+      }
+    }
+
+    form.usertext {
+      textarea {
+        background-color: $color-focus-fill;
+        background-image: url($asset_comment);
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        background-position: top left;
+        border-color: $color-focus-border;
+        &:focus {
+          background-image: none;
         }
-        > p.tagline {
-          color: #aaa;
-        }
-        /* make action links much more compact and highlight comment */
-        > ul.flat-list {
-          li {
-            padding: 1px;
-            font-size: 10px;
-            a {
-              color: #aaa;
-              font-weight: normal;
-              line-height: normal;
-            }
-          }
-          li.first {
-            padding-left: 0px;
-            a {
-              font-size: 12px;
-              color: #333;
-            }
-            &::after {
-              content: ' ';
-              padding-left: 5px;
-            }
-          }
-        }
+      }
+      button.save {
+        @include btn-primary;
+        @include btn-sm;
+      }
+      button.cancel {
+        @include btn-default;
+        @include btn-sm;
+      }
+    }
+
+    > .comment-visits-box {
+      @include focus-box;
+      background-color: $color-focus-fill2;
+      border-radius: 0px;
+    }
+
+    > div.sitetable.nestedlisting > .thing {
+      // More compact root comments.
+      margin-left: 0px;
+      .child {
+        border-left: 1px solid $color-focus-border;
+      }
+
+      form.usertext {
+        margin-bottom: $sidebar-padding;
       }
     }
   }
