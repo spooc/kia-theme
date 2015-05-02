@@ -581,6 +581,12 @@ $btn-padding: 12px;
   }
 }
 
+@mixin main-box-shadow {
+  -webkit-box-shadow: -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow:    -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
+  box-shadow:         -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
+}
+
 // General upvote/downvote style.
 .midcol {
   > .score.likes {
@@ -844,6 +850,7 @@ div.side {
   width: $sidebar-inner-width;
   background-color: $color-focus-bg;
   font-size: $font-size-focus;
+  @include main-box-shadow;
 
   // Remove ugly borders.
   .sidecontentbox .content {
@@ -1184,10 +1191,9 @@ div.content[role=main] {
   padding-right: 0px;
   margin: 0px;
   margin-right: ($sidebar-width - $sidebar-padding);
-
-  -webkit-box-shadow: 0px 19px 25px 0px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow:    0px 19px 25px 0px rgba(0, 0, 0, 0.5);
-  box-shadow:         0px 19px 25px 0px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  position: relative;
+  @include main-box-shadow;
 
   // Prevent floating content from escaping.
   overflow: hidden;
@@ -1356,7 +1362,9 @@ div.content[role=main] {
   }
 
   .footer {
+    @include main-box-shadow;
     @include reddit-site;
+    margin-bottom: 50px;
     a, span {
       @include reddit-site;
     }
