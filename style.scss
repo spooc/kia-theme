@@ -34,6 +34,7 @@ $font-size-btn: 14px;     // Button font sizes.
 // ********* Color configuration. ********* //
 $color-focus-fill: #fff;
 $color-focus-fill2: #f8f8f8;
+$color-focus-fill3: #ccc;
 $color-focus-bg: #f8f8f8;
 $color-focus-fg: #333;
 $color-focus-border: #e2e2e2;
@@ -370,16 +371,20 @@ $btn-padding: 12px;
     }
     > li + li {
       display: none;
-      width: 75px;
-      padding: 4px 8px 4px 8px;
+      padding: 4px 5px;
       margin: 0px;
-      background-color: #ffffff;
-      border: 0px 1px 0px 1px solid #cccccc;
+      width: 90%;
+      background-color: $color-focus-fill;
+      border: 0px 1px 0px 1px solid $color-focus-border;
       -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       -webkit-background-clip: padding-box;
       background-clip: padding-box;
+      text-align: center;
 
+      &:hover {
+        background-color: $color-focus-fill3;
+      }
       a[href$=uv] {
         @include std-link-flair($tag_color_unverified);
       }
@@ -657,8 +662,13 @@ html {
 
   #sr-header-area {
     @include reddit-srarea;
+    @include font-blur;
     a, span {
       @include reddit-srarea;
+      @include font-blur;
+    }
+    div.sr-list, div.srdrop span {
+      line-height: $srarea-height;
     }
   }
 
