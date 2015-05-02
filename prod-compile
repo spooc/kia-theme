@@ -5,3 +5,6 @@
 	echo -e '$production: true;\n'
 	cat style.scss
 ) | scss -t compact --sourcemap=none -s build/reddit-theme.css
+
+# Remove @charset, reddit does not allow it.
+sed -i '.bak' 's/@charset.*$//' build/reddit-theme.css
