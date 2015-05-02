@@ -21,10 +21,11 @@ $asset_icon_main_top: asset_url('icon-main-top', 'png');
 $asset_logo: asset_url('logo', 'png');
 $asset_texture: asset_url('texture', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
+$asset_vote_up: asset_url('vote-up', 'png');
+$asset_vote_down: asset_url('vote-down', 'png');
 
 // ********* Typography configuration. ********* //
-$font-size-focus: 14px;   // General font size for text that should be in focus.
-                          // Larger for readability. People have large resolutions today.
+$font-size-focus: 12px;   // General font size for text that should be in focus.
 $font-size-blur: 10px;    // Small font size for text that should not be in focus
                           // and is very likely to not be interesting for user.
 $font-size-btn: 14px;     // Button font sizes.
@@ -38,6 +39,9 @@ $color-focus-border: #e2e2e2;
 $color-blur-bg: #333;
 $color-blur-fg: #aaa;
 $color-blur-border: #aaa;
+
+$color-upvote: #33b515;
+$color-downvote: #8e1dc9;
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -737,8 +741,7 @@ body {
 
   font-size: $font-size-focus;
   line-height: normal;
-  color: #333;
-  background-color: #fff;
+  color: $color-focus-fg;
 
   // Background texture.
   background-image: url($asset_texture);
@@ -830,10 +833,10 @@ div.side {
       a {
         @include btn-primary;
         @include big-sidebar-btn;
+        font-size: $font-size-btn;
 
         &::after {
           color: white;
-          font-size: 16px;
           content: ' or post';
         }
       }
@@ -1090,12 +1093,16 @@ div.side {
 div.content[role=main] {
   background-color: $color-focus-bg;
   padding: $sidebar-padding;
+  padding-right: 0px;
   margin: 0px;
   margin-right: ($sidebar-width - $sidebar-padding);
 
   -webkit-box-shadow: 0px 19px 25px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow:    0px 19px 25px 0px rgba(0, 0, 0, 0.5);
   box-shadow:         0px 19px 25px 0px rgba(0, 0, 0, 0.5);
+
+  // Prevent floating content from escaping.
+  overflow: hidden;
 
   > div.commentarea {
     @include focus-box;
@@ -1128,6 +1135,20 @@ div.content[role=main] {
 
         > div {
           margin: auto;
+        }
+        > .score.likes {
+          color: $color-upvote;
+        }
+        > .score.dislikes {
+          color: $color-downvote;
+        }
+        div.upmod {
+          background-image: url($asset_vote_up);
+          background-position: 0px 0px;
+        }
+        div.downmod {
+          background-image: url($asset_vote_down);
+          background-position: 0px 0px;
         }
       }
       > div.entry {
