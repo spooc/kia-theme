@@ -23,10 +23,21 @@ $asset_texture: asset_url('texture', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
 
 // ********* Typography configuration. ********* //
-$font-size-general: 14px; // General font size. Larger for readability. People have large resolutions today.
-$font-size-btn: 14px;     // Button font sizes.
+$font-size-focus: 14px;   // General font size for text that should be in focus.
+                          // Larger for readability. People have large resolutions today.
 $font-size-blur: 10px;    // Small font size for text that should not be in focus
                           // and is very likely to not be interesting for user.
+$font-size-btn: 14px;     // Button font sizes.
+
+// ********* Color configuration. ********* //
+$color-focus-fill: #fff;
+$color-focus-bg: #f4f4f4;
+$color-focus-fg: #333;
+$color-focus-border: #e2e2e2;
+
+$color-blur-bg: #333;
+$color-blur-fg: #aaa;
+$color-blur-border: #aaa;
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -72,12 +83,44 @@ $tag_color_industry: #b1af9c;
 $side_header_color: #888;
 $side_header_font_size: 16px;
 
+@mixin reset-text {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+}
+
+@mixin reset-text-focus {
+  @include reset-text;
+  color: $color-focus-fg;
+  font-size: $font-size-focus;
+}
+
+@mixin focus-box {
+  color: $color-focus-fg;
+  background-color: $color-focus-fill;
+  border: 1px solid $color-focus-border;
+}
+
+@mixin blur {
+  color: $color-blur-fg;
+  border-color: $color-blur-border;
+  font-size: $font-size-blur;
+}
+
 // Mixin for reddit site content.
 // We tone this content down with dark colors to remove distractions.
 @mixin reddit-site {
-  color: #eee;
-  background-color: #333;
-  border-color: #aaa;
+  @include reset-text;
+  @include blur;
+  background-color: $color-blur-bg;
+}
+
+@mixin reddit-srarea {
+  @include reddit-site;
+  line-height: $srarea-height;
 }
 
 // Bootstrap flat button.
@@ -98,6 +141,33 @@ $btn-padding: 12px;
   background-image: none;
   border: $btn-border solid transparent;
   border-radius: 4px;
+}
+
+
+// Bootstrap flat default button.
+@mixin btn-default {
+  @include btn;
+
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+
+  &:focus {
+    background-color: #e6e6e6;
+    border-color: #8c8c8c;
+  }
+  &:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+  }
+  &:active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+  }
+  &:active:hover, :active:focus {
+    background-color: #d4d4d4;
+    border-color: #8c8c8c;
+  }
 }
 
 // Bootstrap flat primary button.
@@ -209,13 +279,14 @@ $btn-padding: 12px;
 
   &:after {
     content: $text;
+    text-transform: none;
     padding: 2px;
     display: none;
     position: absolute;
     top: 100%;
     left: 25%;
-    font-size: $font-size-general;
-    line-height: $font-size-general;
+    font-size: $font-size-focus;
+    line-height: $font-size-focus;
     font-weight: normal;
     background-color: #fef4c5;
     border: 1px solid #d4b943;
@@ -250,7 +321,12 @@ $btn-padding: 12px;
     margin-bottom: 2px;
   }
 
-  // FIRST BLOCKQUOTE with ul list is dropdown of filters.
+  // Blockquotes on first level is used as boxes and should have no padding.
+  > blockquote {
+    padding: 0px;
+  }
+
+  // #1: FIRST BLOCKQUOTE with ul list is dropdown of filters.
   // Move the dropdown list to top bar next to 'wiki'.
   blockquote:nth-child(1) ul {
     display: block;
@@ -343,8 +419,13 @@ $btn-padding: 12px;
     }
   }
 
-  // SECOND H3 is the linkbar.
-  h3:nth-child(2) {
+  // #2: Blockquote divider.
+  hr:nth-child(2) {
+    display: none;
+  }
+
+  // #3: Linkbar.
+  blockquote:nth-child(3) {
     display: block;
     position: absolute;
     z-index: 1000;
@@ -363,6 +444,22 @@ $btn-padding: 12px;
     a {
       color: #fff;
       font-weight: normal;
+    }
+  }
+
+  // #4: Blockquote divider.
+  hr:nth-child(4) {
+    display: none;
+  }
+
+  // Rest of blockquotes are focus box elements.
+  blockquote:nth-child(n+5) {
+    @include focus-box;
+    margin: 0px;
+    padding: $sidebar-padding;
+
+    > *:first-child {
+      margin-top: 0px;
     }
   }
 }
@@ -473,13 +570,13 @@ html {
   // to place itself to the right of the tabmenu.
   margin-bottom: $sidebar-top + $tabmenu-height;
   height: 0px;
+  // Fixes sr dropdown under filter by tag, etc.
+  z-index: 10000;
 
   #sr-header-area {
-	font-size: $font-size-blur;
-	line-height: $srarea-height;
-    @include reddit-site;
+    @include reddit-srarea;
     a, span {
-      @include reddit-site;
+      @include reddit-srarea;
     }
   }
 
@@ -520,20 +617,20 @@ html {
       }
     }
 
-    // Main rank mode menu (hot, new, rising...)
+    // Main tabmenu. On the listing page this contains (hot, new, rising...) buttons.
+    // But they can contain any kind of buttons, RES will inject new as well.
     ul.tabmenu {
       position: absolute;
       display: block;
       background-color: transparent;
       top: $sidebar-top;
       right: $sidebar-width;
-      left: 0px;
+      // Leave room on the left for gutter and filter button.
+      // We place the filter button on the left so new buttons can be added here by RES.
+      left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $tabmenu-pad);
       height: $tabmenu-inner-height;
       margin: 0px;
       padding: $tabmenu-pad;
-      // Leave room on the left for gutter and filter button.
-      // We place the filter button on the left so new buttons can be added here by RES.
-      padding-left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $tabmenu-pad * 2);
       // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
       // buttons is inserted (e.g. RES) and screen is too small, but this will break tooltips.
       // We need to prevent this in some other way...
@@ -546,6 +643,7 @@ html {
         font-weight: normal;
         display: inline-block;
         margin: 0px $tabmenu-pad 0px 0px;
+        text-transform: capitalize;
       }
       li a {
         @include btn-primary;
@@ -553,50 +651,52 @@ html {
       li.selected a {
         @extend a:active;
       }
-      li:nth-child(1) {
-        a {
-          @include icon-tabmenu($asset_icon_main_hot);
+      body.listing-page & {
+        li:nth-child(1) {
+          a {
+            @include icon-tabmenu($asset_icon_main_hot);
+          }
+          @include tooltip('Display hot (popular) links.');
         }
-        @include tooltip('Display hot (popular) links.');
-      }
-      li:nth-child(2) {
-        a {
-          @include icon-tabmenu($asset_icon_main_new);
+        li:nth-child(2) {
+          a {
+            @include icon-tabmenu($asset_icon_main_new);
+          }
+          @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
         }
-        @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
-      }
-      li:nth-child(3) {
-        a {
-          @include icon-tabmenu($asset_icon_main_rising);
+        li:nth-child(3) {
+          a {
+            @include icon-tabmenu($asset_icon_main_rising);
+          }
+          @include tooltip('Display rising links.');
         }
-        @include tooltip('Display rising links.');
-      }
-      li:nth-child(4) {
-        a {
-          @include icon-tabmenu($asset_icon_main_top);
+        li:nth-child(4) {
+          a {
+            @include icon-tabmenu($asset_icon_main_top);
+          }
+          @include tooltip('Display top links.');
         }
-        @include tooltip('Display top links.');
-      }
-      li:nth-child(5) {
-        a {
-          @include icon-tabmenu($asset_icon_main_cntrv);
+        li:nth-child(5) {
+          a {
+            @include icon-tabmenu($asset_icon_main_cntrv);
+          }
+          @include tooltip('Display controversial links.');
         }
-        @include tooltip('Display controversial links.');
-      }
-      li:nth-child(6) {
-        a {
-          @include icon-tabmenu($asset_icon_main_glided);
+        li:nth-child(6) {
+          a {
+            @include icon-tabmenu($asset_icon_main_glided);
+          }
+          @include tooltip('Display glided comments.');
         }
-        @include tooltip('Display glided comments.');
-      }
-      // Wiki
-      li:nth-child(7) {
-        // Separate wiki button with 2 units of padding.
-        margin-left: $tabmenu-pad;
-      }
-      // Hide promoted, it's not like the admins allow any promoted links here anyway.
-      li:nth-child(8) {
-        display: none;
+        // Wiki
+        li:nth-child(7) {
+          // Separate wiki button with 2 units of padding.
+          margin-left: $tabmenu-pad;
+        }
+        // Hide promoted, it's not like the admins allow any promoted links here anyway.
+        li:nth-child(8) {
+          display: none;
+        }
       }
     }
   }
@@ -606,16 +706,10 @@ html {
     position: absolute;
     top: 0px;
     height: $srarea-height;
-    line-height: $srarea-height;
     padding: 0px 4px 0px 16px;
-
-	font-size: $font-size-blur;
-    color: #eee;
-    background-color: #333;
-    border-color: #aaa;
-
+    @include reddit-srarea;
     a, span {
-      color: #aaa;
+      @include reddit-srarea;
     }
   }
   #header-bottom-right::before {
@@ -641,7 +735,7 @@ body {
   // Default reddit font (Verdana) makes your eyes bleed.
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  font-size: $font-size-general;
+  font-size: $font-size-focus;
   line-height: normal;
   color: #333;
   background-color: #fff;
@@ -657,12 +751,8 @@ div.side {
   margin: 0px;
   padding: $sidebar-padding;
   width: $sidebar-inner-width;
-
-  border-color: #f4f4f4;
-  border-width: 0px 0px $sidebar-padding $sidebar-padding;
-  border-style: solid;
-
-  font-size: $font-size-general;
+  background-color: $color-focus-bg;
+  font-size: $font-size-focus;
 
   // Remove ugly borders.
   .sidecontentbox .content {
@@ -684,7 +774,7 @@ div.side {
     // We utilize the first spacer to move sidebar into header since
     // this is a waste of space otherwise and it helps clip Vivian.
     display: block;
-    background-color: #fff;
+    background-color: $color-focus-bg;
     margin-top: -$tabmenu-height - $sidebar-padding;
     margin-bottom: -$tabmenu-height + $sidebar-padding;
     margin-left: -$sidebar-padding;
@@ -694,7 +784,6 @@ div.side {
     height: $tabmenu-height;
     content: '';
   }
-
 
   // Style for sidebar spacers and the content inside those spacers.
   // The content of spacers varies depending on page/user etc and the order
@@ -719,12 +808,12 @@ div.side {
       input[type=text] {
         border-radius: 10px;
         width: $search-width;
-        background-color: #fff;
-        color: #000;
+        background-color: $color-focus-fill;
+        color: $color-focus-fg;
       }
       #searchexpando {
-        background-color: #fff;
-        border-color: #aaa;
+        background-color: $color-focus-fill;
+        border-color: $color-focus-border;
       }
     }
 
@@ -752,17 +841,18 @@ div.side {
         display: none;
       }
 
+      /* add this note to the submit link page instead
       &::after {
         content: 'Note that your account must be older than 3 days. Read the rules before posting. Your post may be deleted automatically if it breaks one or more rules.';
         display: none;
-        font-size: $font-size-general;
+        font-size: $font-size-focus;
         margin-bottom: $sidebar-padding;
         line-height: normal;
         font-weight: normal;
       }
       &:hover::after {
         display: block;
-      }
+      }*/
     }
 
     // Hide text submit. We used combined button.
@@ -770,8 +860,36 @@ div.side {
       display: none;
     }
 
+    // Link information in comment thread.
+    div.linkinfo {
+      @include focus-box;
+      margin-bottom: $sidebar-padding;
+      padding: $sidebar-padding;
+
+      * {
+        @include reset-text;
+        font-size: $font-size-focus;
+      }
+      div.score {
+        margin: $sidebar-padding 0px;
+        span {
+          font-size: $font-size-focus * 2;
+        }
+      }
+      div.shortlink {
+        font-size: 0px;
+        input {
+          font-size: $font-size-focus;
+          width: 100%;
+          border-width: 0px;
+          background-color: transparent;
+          padding: 0px;
+        }
+      }
+    }
+
     // General sidebar content.
-    div.titlebox {
+    > div.titlebox {
       h1.redditname {
         // Just takes up space. People know this is KotakuInAction.
         display: none;
@@ -779,14 +897,9 @@ div.side {
       // Subscribe button.
       span.subscribe-button {
         display: block;
+        margin: 0px;
+        margin-bottom: $sidebar-padding;
 
-        > a.remove {
-          display: none;
-
-          body.subscriber & {
-            display: inline;
-          }
-        }
         > a.add {
           @include btn-success;
           @include big-sidebar-btn;
@@ -794,17 +907,44 @@ div.side {
 
           &::before {
             content: 'Subscribe to /r/KotakuInAction';
-            font-size: 16px;
+            font-size: $font-size-btn;
           }
 
           body.subscriber & {
             display: none;
           }
         }
+        > a.remove {
+          @include btn-default;
+          @include big-sidebar-btn;
+          font-size: 0px;
+          display: none;
+
+          &::before {
+            content: 'Unsubscribe from /r/KotakuInAction';
+            font-size: $font-size-btn;
+          }
+
+          body.subscriber & {
+            display: block;
+          }
+        }
       }
       // Subscribers counts.
       span.subscribers {
+        @include reset-text-focus;
+        @include focus-box;
+        display: block;
+        padding: $sidebar-padding;
+        margin: 0px;
+        padding-bottom: 0px;
+        border-bottom: 0px;
         span.number {
+          body.subscriber &::before {
+            display: block;
+            margin-bottom: $sidebar-padding;
+            content: 'You’re a subscriber!';
+          }
           &::after {
             content: ' ethical violations.';
           }
@@ -814,6 +954,14 @@ div.side {
         }
       }
       p.users-online {
+        @include reset-text-focus;
+        @include focus-box;
+        display: block;
+        padding: $sidebar-padding;
+        margin: 0px;
+        margin-bottom: $sidebar-padding;
+        padding-top: 0px;
+        border-top: 0px;
         &::before {
           // Hide ugly green circle.
           display: none;
@@ -830,7 +978,99 @@ div.side {
       // Entering custom markdown.
       form.usertext > div.usertext-body > div.md {
         @include custom-markdown;
+        margin-bottom: $sidebar-padding;
       }
+      // Created by etc.
+      div.bottom {
+        @include reset-text;
+        @include focus-box;
+        font-size: $font-size-blur;
+        margin-bottom: $sidebar-padding;
+        padding: $sidebar-padding;
+      }
+
+      // Other sidebar junk and random HTML reddit injects where we just want to reset as much as possible
+      // because it looks nasty. Hide ugly icons, etc.
+      > div.leavemoderator, > form.leavecontributor-button, > form.flairtoggle {
+        background-color: transparent;
+        @include reset-text;
+        color: $color-focus-fg;
+        font-size: $font-size-blur;
+        padding: 0px $sidebar-padding;
+        margin: 0px;
+        margin-bottom: $sidebar-padding;
+        &::before {
+          display: none;
+        }
+      }
+      // Flair configuration in a virtual box. These are two elements because someone at reddit.com should be fired.
+      > form.flairtoggle {
+        @include focus-box;
+        font-size: $font-size-blur;
+        padding: $sidebar-padding;
+        margin: 0px;
+        padding-bottom: 0px;
+        border-bottom: 0px;
+
+        + div.tagline {
+          @include focus-box;
+          padding: $sidebar-padding;
+          border-top: 0px;
+          display: block;
+          margin: 0px;
+          margin-bottom: $sidebar-padding;
+        }
+      }
+    }
+
+    // Style all sidecontent boxes focus boxes.
+    div.sidecontentbox {
+      @include focus-box;
+      @include reset-text-focus;
+      padding: $sidebar-padding;
+      margin-bottom: $sidebar-padding;
+
+      // Style message moderators as a button.
+      a.helplink[href^="/message/compose?to"] {
+        @include btn-primary;
+        @include big-sidebar-btn;
+        margin: 0px;
+        margin-bottom: $sidebar-padding;
+        display: block;
+        width: auto;
+        float: none;
+        font-size: 0px;
+
+        &::before {
+          content: 'Message the KiA Moderators';
+          font-size: $font-size-btn;
+        }
+      }
+    }
+
+    // Compress moderation tools.
+    div.sidecontentbox#moderation_tools {
+      li {
+        font-size: $font-size-blur;
+        background-color: transparent;
+        position: relative;
+        a {
+          @include btn-default;
+          display: block;
+          width: auto;
+          text-align: left;
+          margin-left: 30px;
+          &::before {
+            position: absolute;
+            margin-right: -16px;
+            left: 0px;
+          }
+        }
+      }
+    }
+
+    div.account-activity-box {
+      margin-bottom: $sidebar-padding;
     }
 
     // Hide create your own subreddit, not interesting to 99% of users.
@@ -841,39 +1081,58 @@ div.side {
 
     // The second last sidebar content should always be "RECENTLY VIEWED LINKS".
     // Remove it as almost nobody is interested in it and it's just more clutter.
-    &:nth-last-child(2) > div.sidecontentbox {
-      > div.title {
-        display: none;
-      }
-      > ul:last-child {
-        display: none;
-      }
+    &:nth-last-child(2) {
+      display: none;
     }
   }
 }
 
-div.content {
-  background-color: #fff;
+div.content[role=main] {
+  background-color: $color-focus-bg;
+  padding: $sidebar-padding;
   margin: 0px;
-  padding: 0px;
+  margin-right: ($sidebar-width - $sidebar-padding);
 
   -webkit-box-shadow: 0px 19px 25px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow:    0px 19px 25px 0px rgba(0, 0, 0, 0.5);
   box-shadow:         0px 19px 25px 0px rgba(0, 0, 0, 0.5);
 
+  > div.commentarea {
+    @include focus-box;
+  }
+
+  // Disable all framing for usertext body for cleaner look. Less is more.
+  .link .usertext-body .md {
+    border-style: none;
+    border-radius: 0px;
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+  }
+
   > div#siteTable {
     > div.thing {
-      padding: 8px 20px;
-      margin: 0px;
+      @include focus-box;
+      padding: $sidebar-padding;
+      margin: 0px 0px $sidebar-padding 0px;
 
       > .rank {
         // Hide link rank. For 99% of users this information is useless.
         display: none;
       }
       > .midcol {
-        margin: 0px 20px 0px 0px;
+        // We want to assign the midcol a width that aligns the right content with the left gutter.
+        width: $left-gutter-width - $sidebar-padding;
+        margin: 0px 0px 0px 0px;
+        margin-left: -$sidebar-padding;
+
+        > div {
+          margin: auto;
+        }
       }
       > div.entry {
+        margin: 0px;
+
         > p.title {
           @include content-title;
 
@@ -912,9 +1171,6 @@ div.content {
         }
       }
     }
-    > .even {
-      background-color: #f4f4f4;
-    }
   }
 }
 
@@ -938,18 +1194,18 @@ div.content {
   // Tabmenu dark stripe.
   // Placed here because not all pages contain a tabmenu.
   &::after {
-      position: absolute;
-      display: block;
-      background-color: #000;
-      background-color: rgba(0, 0, 0, 0.2);
-      top: $sidebar-top;
-      right: 0px;
-      left: 0px;
-      height: $tabmenu-height;
-      margin: 0px;
-      padding: 0px;
-      content: '';
-      z-index: -1;
+    position: absolute;
+    display: block;
+    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.2);
+    top: $sidebar-top;
+    right: 0px;
+    left: 0px;
+    height: $tabmenu-height;
+    margin: 0px;
+    padding: 0px;
+    content: '';
+    z-index: -1;
   }
 
   .footer {
