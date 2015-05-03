@@ -642,13 +642,13 @@ html {
     display: block;
     margin: 0px;
 
+    // We hide the text.
+    font-size: 0px;
+
     > a {
       display: block;
       height: $logoarea-height;
       width: $tabmenu-min-width;
-
-      // We hide the text.
-      font-size: 0px;
 
       // Show the logo instead. Scale it to a height that fills the entire logo area height.
       background-image: url($asset_logo);
@@ -1604,11 +1604,10 @@ div.content[role=main] {
   }
 }
 
-// Hide filter by tag on submit page. It's distracting.
+// Hide filter by tag and other buttons on submit page to remove distractions and optimize funnel to submit.
 body.submit-page div.side div.usertext-body div.md blockquote:first-child {
   display: none;
 }
-
 
 // Footer
 .footer-parent {
