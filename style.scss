@@ -13,6 +13,8 @@ $production: false !default !global;
 
 // ********* Assets. ********* //
 $asset_comment: asset_url('comment', 'png');
+$asset_nm_sun: asset_url('icon-nm-sun', 'png');
+$asset_nm_moon: asset_url('icon-nm-moon', 'png');
 $asset_icon_main_cntrv: asset_url('icon-main-cntrv', 'png');
 $asset_icon_main_glided: asset_url('icon-main-glided', 'png');
 $asset_icon_main_hot: asset_url('icon-main-hot', 'png');
@@ -22,6 +24,7 @@ $asset_icon_main_top: asset_url('icon-main-top', 'png');
 $asset_logo: asset_url('logo', 'png');
 $asset_texture: asset_url('texture', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
+$asset_vivian_night: asset_url('vivian-night', 'png');
 $asset_vote_up: asset_url('vote-up', 'png');
 $asset_vote_down: asset_url('vote-down', 'png');
 
@@ -47,6 +50,8 @@ $color-alert-fg: #f33;
 
 $color-upvote: #33b515;
 $color-downvote: #8e1dc9;
+
+$nm-general-opacity: 0.4;
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -117,12 +122,20 @@ $side_header_font_size: 16px;
   @include reset-text;
   color: $color-focus-fg;
   font-size: $font-size-focus;
+
+  html[lang*='nm'] & {
+    color: darken($color-focus-fill, 60%);
+  }
 }
 
 @mixin font-blur {
   @include reset-text;
   color: $color-blur-fg;
   font-size: $font-size-blur;
+
+  html[lang*='nm'] & {
+    color: darken($color-focus-fill, 70%);
+  }
 }
 
 @mixin font-form-field {
@@ -131,16 +144,66 @@ $side_header_font_size: 16px;
   font-size: $font-size-btn;
 }
 
-@mixin focus-box {
-  color: $color-focus-fg;
+@mixin focus-fill {
   background-color: $color-focus-fill;
+  html[lang*='nm'] & {
+    background-color: darken($color-focus-fill, 85%);
+  }
+}
+
+@mixin focus-fill2 {
+  background-color: $color-focus-fill2;
+  html[lang*='nm'] & {
+    background-color: darken($color-focus-fill2, 85%);
+  }
+}
+
+@mixin focus-fill3 {
+  background-color: $color-focus-fill3;
+  html[lang*='nm'] & {
+    background-color: darken($color-focus-fill3, 85%);
+  }
+}
+
+
+@mixin focus {
+  @include focus-fill;
+  color: $color-focus-fg;
+  font-size: $font-size-focus;
+
+  html[lang*='nm'] & {
+    color: darken($color-focus-fill, 60%);
+    border-color: darken($color-focus-border, 83%);
+  }
+}
+
+@mixin focus-box {
   border: 1px solid $color-focus-border;
+  @include focus;
+}
+
+@mixin focus-bg {
+  background-color: $color-focus-bg;
+  html[lang*='nm'] & {
+    background-color: darken($color-focus-bg, 85%);
+  }
 }
 
 @mixin blur {
   color: $color-blur-fg;
   border-color: $color-blur-border;
   font-size: $font-size-blur;
+
+  html[lang*='nm'] & {
+    color: darken($color-blur-fg, 50%);
+    border-color: darken($color-blur-border, 50%);
+  }
+}
+
+@mixin nm-low-opacity {
+  html[lang*='nm'] & {
+    opacity: $nm-general-opacity;
+  }
 }
 
 // Mixin for reddit site content.
@@ -149,10 +212,14 @@ $side_header_font_size: 16px;
   @include reset-text;
   @include blur;
   background-color: $color-blur-bg;
+  html[lang*='nm'] & {
+    background-color: darken($color-focus-bg, 90%);
+  }
 }
 
 @mixin reddit-srarea {
   @include reddit-site;
+  @include font-blur;
   line-height: $srarea-height;
 }
 
@@ -177,82 +244,54 @@ $btn-padding: 12px;
 }
 
 
+@mixin button-variant-raw($fg, $bg, $bd) {
+  color: $fg;
+  background-color: $bg;
+  border-color: $bd;
+
+  &:focus,
+  &.focus {
+    background-color: darken($bg, 10%);
+        border-color: darken($bd, 25%);
+  }
+  &:hover {
+    background-color: darken($bg, 10%);
+        border-color: darken($bd, 12%);
+  }
+  &:active & {
+    background-color: darken($bg, 10%);
+        border-color: darken($bd, 12%);
+  }
+}
+
+@mixin button-variant-nmc($fg, $bg, $bd, $fgo, $bgo, $bdo) {
+  @include button-variant-raw($fg, $bg, $bd);
+  html[lang*='nm'] & {
+    @include button-variant-raw(darken($fg, $fgo), darken($bg, $bgo), darken($bd, $bdo));
+  }
+}
+
+
+@mixin button-variant($fg, $bg, $bd) {
+  @include button-variant-nmc($fg, $bg, $bd, 45%, 25%, 20%);
+}
+
 // Bootstrap flat default button.
 @mixin btn-default {
   @include btn;
-
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
-
-  &:focus {
-    background-color: #e6e6e6;
-    border-color: #8c8c8c;
-  }
-  &:hover {
-    background-color: #e6e6e6;
-    border-color: #adadad;
-  }
-  &:active {
-    background-color: #e6e6e6;
-    border-color: #adadad;
-  }
-  &:active:hover, :active:focus {
-    background-color: #d4d4d4;
-    border-color: #8c8c8c;
-  }
+  @include button-variant-nmc(#333, #fff, #ccc, 100%, 75%, 60%);
 }
 
 // Bootstrap flat primary button.
 @mixin btn-primary {
   @include btn;
-
-  color: #fff;
-  background-color: #7a33b7;
-  border-color: #6d2ea4;
-
-  &:focus {
-    background-color: #602890;
-    border-color: #2b1240;
-  }
-  &:hover {
-    background-color: #602890;
-    border-color: #4d2074;
-  }
-  &:active {
-    background-color: #602890;
-    border-color: #4d2074;
-  }
-  &:active:hover, :active:focus {
-    background-color: #4d2074;
-    border-color: #2b1240;
-  }
+  @include button-variant(#fff, #7a33b7, #6d2ea4);
 }
 
 // Bootstrap flat success button.
 @mixin btn-success {
   @include btn;
-
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
-
-  &:focus {
-    background-color: #449d44;
-    border-color: #255625;
-  }
-  &:hover {
-    background-color: #449d44;
-    border-color: #398439;
-  }
-  &:active {
-    background-color: #449d44;
-    border-color: #398439;
-  }
-  &:active:hover, :active:focus {
-    background-color: #398439;
-    border-color: #255625;
-  }
+  @include button-variant(#fff, #5cb85c, #4cae4c);
 }
 
 // Bootstrap btn-sm.
@@ -279,17 +318,32 @@ $btn-padding: 12px;
   overflow: hidden;
 }
 
-@mixin icon-tabmenu($icon_url) {
-  @include hide-text;
-
-  background-image: url($icon_url);
-  background-repeat: no-repeat;
-  background-size: $tabmenu-inner-height - $btn-border * 8;
-  background-position: ($btn-border * 3) ($btn-border * 3);
+@mixin icon-tabmenu-custom($icon_url) {
+  position: relative;
+  padding: 0px;
   display: inline-block;
   width: $tabmenu-inner-height - $btn-border * 2;
   height: $tabmenu-inner-height - $btn-border * 2;
-  padding: 0px;
+
+  &::before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-image: url($icon_url);
+    background-repeat: no-repeat;
+    background-size: $tabmenu-inner-height - $btn-border * 8;
+    background-position: ($btn-border * 3) ($btn-border * 3);
+    @include nm-low-opacity;
+  }
+}
+
+@mixin icon-tabmenu($icon_url) {
+  @include hide-text;
+  @include icon-tabmenu-custom($icon_url);
 }
 
 @-webkit-keyframes show_on_100 {
@@ -324,8 +378,10 @@ $btn-padding: 12px;
     padding: 2px;
     display: none;
     position: absolute;
-    top: 100%;
+    top: 105%;
     left: 25%;
+    width: auto;
+    color: $color-focus-fg;
     font-size: $font-size-focus;
     line-height: $font-size-focus;
     font-weight: normal;
@@ -348,167 +404,6 @@ $btn-padding: 12px;
   }
 }
 
-@mixin custom-markdown {
-  @include font-focus;
-
-  ul {
-    padding-left: 20px;
-  }
-
-  h1 {
-    font-size: $side_header_font_size;
-    color: $side_header_color;
-    margin-top: 10px;
-    margin-bottom: 2px;
-  }
-
-  // Blockquotes on first level is used as boxes and should have no padding.
-  > blockquote {
-    padding: 0px;
-  }
-
-  // #1: FIRST BLOCKQUOTE with ul list is dropdown of filters.
-  // Move the dropdown list to top bar next to 'wiki'.
-  blockquote:nth-child(1) ul {
-    display: block;
-    position: absolute;
-    z-index: 1000;
-    border: none;
-    top: ($sidebar-top + $tabmenu-pad);
-    left: $left-gutter-width;
-    width: $tabmenu-tag-filter-btn-width;
-    padding: 0px;
-
-    &:hover > li {
-      display: block;
-    }
-    > li {
-      display: block;
-    }
-    > li:first-child {
-      @include btn-primary;
-      width: $tabmenu-tag-filter-btn-width - $btn-padding * 2;
-    }
-    > li + li {
-      display: none;
-      padding: 4px 5px;
-      margin: 0px;
-      width: 90%;
-      background-color: $color-focus-fill;
-      border: 0px 1px 0px 1px solid $color-focus-border;
-      -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      -webkit-background-clip: padding-box;
-      background-clip: padding-box;
-      text-align: center;
-
-      &:hover {
-        background-color: $color-focus-fill3;
-      }
-      a[href$=uv] {
-        @include std-link-flair($tag_color_unverified);
-      }
-      a[href$=ru] {
-        @include std-link-flair($tag_color_rumor);
-      }
-      a[href$=vf] {
-        @include std-link-flair($tag_color_verified);
-      }
-      a[href$=pe] {
-        @include std-link-flair($tag_color_people);
-      }
-      a[href$=ha] {
-        @include std-link-flair($tag_color_happenings);
-      }
-      a[href$=id] {
-        @include std-link-flair($tag_color_ideas);
-      }
-      a[href$=bc] {
-        @include std-link-flair($tag_color_goal);
-      }
-      a[href$=ed] {
-        @include std-link-flair($tag_color_editorial);
-      }
-      a[href$=mt] {
-        @include std-link-flair($tag_color_meta);
-      }
-      a[href$=dr] {
-        @include std-link-flair($tag_color_drama);
-      }
-      a[href$=hu] {
-        @include std-link-flair($tag_color_humor);
-      }
-      a[href$=st] {
-        @include showerthought-flair;
-      }
-      a[href$=ds] {
-        @include std-link-flair($tag_color_discussion);
-      }
-      a[href$=ot] {
-        @include std-link-flair($tag_color_off_topic);
-      }
-      a[href$=et] {
-        @include std-link-flair($tag_color_ethics);
-      }
-      a[href$=in] {
-        @include std-link-flair($tag_color_industry);
-      }
-    }
-    > li:nth-child(2) {
-      border-radius: 4px 4px 0px 0px;
-      padding-top: 8px;
-    }
-    > li:last-child {
-      border-radius: 0px 0px 4px 4px;
-      padding-bottom: 8px;
-    }
-  }
-
-  // #2: Blockquote divider.
-  hr:nth-child(2) {
-    display: none;
-  }
-
-  // #3: Linkbar.
-  blockquote:nth-child(3) {
-    display: block;
-    position: absolute;
-    z-index: 1000;
-    border: none;
-    margin: 5px 0px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    height: $linkbar-height;
-    top: $linkbar-top;
-    left: $left-gutter-width;
-    right: 0px;
-    color: #aaa;
-    font-weight: normal;
-
-    a {
-      color: #fff;
-      font-weight: normal;
-    }
-  }
-
-  // #4: Blockquote divider.
-  hr:nth-child(4) {
-    display: none;
-  }
-
-  // Rest of blockquotes are focus box elements.
-  blockquote:nth-child(n+5) {
-    @include focus-box;
-    margin: 0px;
-    padding: $sidebar-padding;
-
-    > *:first-child {
-      margin-top: 0px;
-    }
-  }
-}
-
 // TODO: These can be more generic.
 @mixin content-title {
   > a:first-child {
@@ -519,7 +414,7 @@ $btn-padding: 12px;
       content: 'NO TAG';
     }
   }
-  .linkflairlabel {
+  @at-root .linkflairlabel {
     font-size: 10px;
 
     &[title=UNVERIFIED] {
@@ -617,6 +512,21 @@ $btn-padding: 12px;
   @include box-shadow(-10px, 15px, 15px, 0px, rgba(0, 0, 0, 0.4));
 }
 
+// Nightmode hacks.
+html[lang*='nm'] {
+  a, .thing .title a {
+    color: darken(#3ff, 43%);
+  }
+  a:visited, .thing.visited .title a {
+    color: lighten(#551a8b, 5%);
+  }
+  // Just lower opacity of things that is to tedius to adjust color of.
+  span.linkflairlabel, .midcol > div, div.expando-button,
+  div.thing p.title a:first-child::before {
+    opacity: $nm-general-opacity;
+  }
+}
+
 // General upvote/downvote style.
 .midcol {
   > .score.likes {
@@ -678,6 +588,11 @@ div.thing {
   }
 }
 
+// General markdown style.
+div.md {
+  @include font-focus;
+}
+
 // This fixes some issues with reddit companion.
 html {
 	position: relative;
@@ -698,153 +613,149 @@ html {
 
   #sr-header-area {
     @include reddit-srarea;
-    @include font-blur;
-
     a, span {
       @include reddit-srarea;
-      @include font-blur;
     }
     div.sr-list, div.srdrop span {
       line-height: $srarea-height;
     }
   }
+}
 
-  #header-bottom-left {
-    // We cannot let this element cover the entire page as it would otherwise cover the search
-    // field in lower resolutions, so we make it the maximum possible size instead.
-    width: ($tabmenu-min-width - $left-gutter-width);
-    height: $logoarea-height;
-    margin-left: $left-gutter-width;
-    line-height: 0px;
+#header-bottom-left {
+  // We cannot let this element cover the entire page as it would otherwise cover the search
+  // field in lower resolutions, so we make it the maximum possible size instead.
+  width: ($tabmenu-min-width - $left-gutter-width);
+  height: $logoarea-height;
+  margin-left: $left-gutter-width;
+  line-height: 0px;
 
-    // Hide the element actually intended for the subreddit logo
-    // as it links to reddit front page instead of the subreddit.
-    > #header-img-a, > #header-img {
-      display: none;
-    }
+  // Hide the element actually intended for the subreddit logo
+  // as it links to reddit front page instead of the subreddit.
+  > #header-img-a, > #header-img {
+    display: none;
+  }
 
-    // The reddit name element is used for the logo.
-    // An logo asset is used instead which should be changed at will, manually.
-    > span.redditname {
+  // The reddit name element is used for the logo.
+  // An logo asset is used instead which should be changed at will, manually.
+  > span.redditname {
+    display: block;
+    margin: 0px;
+
+    > a {
       display: block;
-      margin: 0px;
+      height: $logoarea-height;
+      width: $tabmenu-min-width;
 
-      > a {
-        display: block;
-        height: $logoarea-height;
-        width: $tabmenu-min-width;
-
-        // We hide the text.
-        font-size: 0px;
-
-        // Show the logo instead. Scale it to a height that fills the entire logo area height.
-        background-image: url($asset_logo);
-        background-repeat: no-repeat;
-        background-position: 0px $logoarea-vpadding;
-        background-size: auto ($logoarea-height - $logoarea-vpadding * 2);
-        background-color: transparent;
-      }
-    }
-
-    // Main tabmenu. On the listing page this contains (hot, new, rising...) buttons.
-    // But they can contain any kind of buttons, RES will inject new as well.
-    ul.tabmenu {
-      position: absolute;
-      display: block;
-      background-color: transparent;
-      top: $sidebar-top;
-      right: $sidebar-width;
-      // Leave room on the left for gutter and filter button.
-      // We place the filter button on the left so new buttons can be added here by RES.
-      left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $tabmenu-pad);
-      height: $tabmenu-inner-height;
-      margin: 0px;
-      padding: $tabmenu-pad;
-      // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
-      // buttons is inserted (e.g. RES) and screen is too small, but this will break tooltips.
-      // We need to prevent this in some other way...
-      overflow: visible;
-
-      // Required to prevent space between li to add extra margin.
+      // We hide the text.
       font-size: 0px;
 
-      li {
-        font-weight: normal;
-        display: inline-block;
-        margin: 0px $tabmenu-pad 0px 0px;
-        text-transform: capitalize;
-      }
-      li a {
-        @include btn-primary;
-      }
-      li.selected a {
-        @extend a:active;
-      }
-      body.listing-page &, body.wiki-page & {
-        li:nth-child(1) {
-          a {
-            @include icon-tabmenu($asset_icon_main_hot);
-          }
-          @include tooltip('Display hot (popular) links.');
-        }
-        li:nth-child(2) {
-          a {
-            @include icon-tabmenu($asset_icon_main_new);
-          }
-          @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
-        }
-        li:nth-child(3) {
-          a {
-            @include icon-tabmenu($asset_icon_main_rising);
-          }
-          @include tooltip('Display rising links.');
-        }
-        li:nth-child(4) {
-          a {
-            @include icon-tabmenu($asset_icon_main_top);
-          }
-          @include tooltip('Display top links.');
-        }
-        li:nth-child(5) {
-          a {
-            @include icon-tabmenu($asset_icon_main_cntrv);
-          }
-          @include tooltip('Display controversial links.');
-        }
-        li:nth-child(6) {
-          a {
-            @include icon-tabmenu($asset_icon_main_glided);
-          }
-          @include tooltip('Display glided comments.');
-        }
-        // Wiki
-        li:nth-child(7) {
-          // Separate wiki button with 2 units of padding.
-          margin-left: $tabmenu-pad;
-        }
-        // Hide promoted, it's not like the admins allow any promoted links here anyway.
-        li:nth-child(8) {
-          display: none;
-        }
-      }
+      // Show the logo instead. Scale it to a height that fills the entire logo area height.
+      background-image: url($asset_logo);
+      background-repeat: no-repeat;
+      background-position: 0px $logoarea-vpadding;
+      background-size: auto ($logoarea-height - $logoarea-vpadding * 2);
+      background-color: transparent;
+      @include nm-low-opacity;
     }
   }
 
-  // Move user box up into subreddit area to get it out of the way.
-  #header-bottom-right {
+  // Main tabmenu. On the listing page this contains (hot, new, rising...) buttons.
+  // But they can contain any kind of buttons, RES will inject new as well.
+  ul.tabmenu {
     position: absolute;
-    top: 0px;
-    height: $srarea-height;
-    padding: 0px 4px 0px 16px;
-    @include reddit-srarea;
-    a, span {
-      @include reddit-srarea;
+    display: block;
+    background-color: transparent;
+    top: $sidebar-top;
+    right: $sidebar-width;
+    // Leave room on the left for gutter and filter button.
+    // We place the filter button on the left so new buttons can be added here by RES.
+    left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $sidebar-padding + $tabmenu-inner-height + $tabmenu_pad);
+    height: $tabmenu-inner-height;
+    margin: 0px;
+    padding: $tabmenu-pad;
+    // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
+    // buttons is inserted (e.g. RES) and screen is too small, but this will break tooltips.
+    // We need to prevent this in some other way...
+    overflow: visible;
+
+    // Required to prevent space between li to add extra margin.
+    font-size: 0px;
+
+    li {
+      font-weight: normal;
+      display: inline-block;
+      margin: 0px $tabmenu-pad 0px 0px;
+      text-transform: capitalize;
+    }
+    li a {
+      @include btn-primary;
+    }
+    li.selected a {
+      @extend a:active;
+    }
+    body.listing-page &, body.wiki-page & {
+      li:nth-child(1) {
+        a {
+          @include icon-tabmenu($asset_icon_main_hot);
+        }
+        @include tooltip('Display hot (popular) links.');
+      }
+      li:nth-child(2) {
+        a {
+          @include icon-tabmenu($asset_icon_main_new);
+        }
+        @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
+      }
+      li:nth-child(3) {
+        a {
+          @include icon-tabmenu($asset_icon_main_rising);
+        }
+        @include tooltip('Display rising links.');
+      }
+      li:nth-child(4) {
+        a {
+          @include icon-tabmenu($asset_icon_main_top);
+        }
+        @include tooltip('Display top links.');
+      }
+      li:nth-child(5) {
+        a {
+          @include icon-tabmenu($asset_icon_main_cntrv);
+        }
+        @include tooltip('Display controversial links.');
+      }
+      li:nth-child(6) {
+        a {
+          @include icon-tabmenu($asset_icon_main_glided);
+        }
+        @include tooltip('Display glided comments.');
+      }
+      // Wiki
+      li:nth-child(7) {
+        // Separate wiki button with 2 units of padding.
+        margin-left: $tabmenu-pad;
+      }
+      // Hide promoted, it's not like the admins allow any promoted links here anyway.
+      li:nth-child(8) {
+        display: none;
+      }
     }
   }
-  #header-bottom-right::before {
-    content: "| ";
-    color: #aaa;
+}
+
+// Move user box up into subreddit area to get it out of the way.
+#header-bottom-right {
+  position: absolute;
+  top: 0px;
+  height: $srarea-height;
+  padding: 0px 4px 0px 4px;
+  @include reddit-srarea;
+  a, span {
+    @include reddit-srarea;
   }
+  border-style: solid;
+  border-width: 0px 0px 0px 1px;
 }
 
 * {
@@ -871,15 +782,20 @@ body {
   // Background texture.
   background-image: url($asset_texture);
   background-repeat: repeat;
-  background-color: #000;
+  background-color: #151515;
   background-size: 40%;
+
+  html[lang*='nm'] & {
+    background-image: none;
+    background-color: #000;
+  }
 }
 
 div.side {
   margin: 0px;
   padding: $sidebar-padding;
   width: $sidebar-inner-width;
-  background-color: $color-focus-bg;
+  @include focus-bg;
   font-size: $font-size-focus;
   @include main-box-shadow;
 
@@ -903,7 +819,7 @@ div.side {
     // We utilize the first spacer to move sidebar into header since
     // this is a waste of space otherwise and it helps clip Vivian.
     display: block;
-    background-color: $color-focus-bg;
+    @include focus-bg;
     margin-top: -$tabmenu-height - $sidebar-padding;
     margin-bottom: -$tabmenu-height + $sidebar-padding;
     margin-left: -$sidebar-padding;
@@ -925,7 +841,7 @@ div.side {
     padding: 0;
 
     // Search. Move into header.
-    form#search {
+    @at-root form#search {
       position: absolute;
       $search-width: 200px;
       width: $search-width;
@@ -937,17 +853,15 @@ div.side {
       input[type=text] {
         border-radius: 10px;
         width: $search-width;
-        background-color: $color-focus-fill;
-        color: $color-focus-fg;
+        @include focus;
       }
       #searchexpando {
-        background-color: $color-focus-fill;
-        border-color: $color-focus-border;
+        @include focus-box;
       }
     }
 
     // We convert this to a nice button instead of ugly arrow.
-    div.submit-link div.morelink {
+    @at-root div.submit-link div.morelink {
       border-style: none;
       background-image: none;
       background-color: transparent;
@@ -962,7 +876,6 @@ div.side {
         font-size: $font-size-btn;
 
         &::after {
-          color: white;
           content: ' or post';
         }
       }
@@ -1011,7 +924,7 @@ div.side {
         display: none;
       }
       // Subscribe button.
-      span.subscribe-button {
+      @at-root span.subscribe-button.fancy-toggle-button {
         display: block;
         margin: 0px;
         margin-bottom: $sidebar-padding;
@@ -1047,7 +960,7 @@ div.side {
         }
       }
       // Subscribers counts.
-      span.subscribers {
+      @at-root span.subscribers {
         @include font-focus;
         @include focus-box;
         display: block;
@@ -1069,7 +982,7 @@ div.side {
           display: none;
         }
       }
-      p.users-online {
+      @at-root p.users-online {
         @include font-focus;
         @include focus-box;
         display: block;
@@ -1091,9 +1004,8 @@ div.side {
           display: none;
         }
       }
-      // Entering custom markdown.
+      // Entering custom sidebar markdown.
       form.usertext > div.usertext-body > div.md {
-        @include custom-markdown;
         margin-bottom: $sidebar-padding;
       }
       // Created by etc.
@@ -1139,79 +1051,289 @@ div.side {
       }
     }
 
-    // Style all sidecontent boxes focus boxes.
-    div.sidecontentbox {
-      @include focus-box;
-      @include font-focus;
-      padding: $sidebar-padding;
-      margin-bottom: $sidebar-padding;
-
-      // Style message moderators as a button.
-      a.helplink[href^="/message/compose?to"] {
-        @include btn-primary;
-        @include big-sidebar-btn;
-        margin: 0px;
-        margin-bottom: $sidebar-padding;
-        display: block;
-        width: auto;
-        float: none;
-        font-size: 0px;
-
-        &::before {
-          content: 'Message the KiA Moderators';
-          font-size: $font-size-btn;
-        }
-      }
-    }
-
-    // Compress moderation tools.
-    div.sidecontentbox#moderation_tools {
-      li {
-        font-size: $font-size-blur;
-        background-color: transparent;
-        position: relative;
-        a {
-          @include btn-default;
-          display: block;
-          width: auto;
-          text-align: left;
-          margin-left: 30px;
-          &::before {
-            position: absolute;
-            margin-right: -16px;
-            left: 0px;
-          }
-        }
-      }
-    }
-
-    div.account-activity-box {
-      margin-bottom: $sidebar-padding;
-    }
-
-    // Hide create your own subreddit, not interesting to 99% of users.
-    // There are plenty of ways to find this button.
-    div.create {
-      display: none;
-    }
-
     // The second last sidebar content should always be "RECENTLY VIEWED LINKS".
     // Remove it as almost nobody is interested in it and it's just more clutter.
     &:nth-last-child(2) {
       display: none;
     }
   }
+
+  // Style all sidecontent boxes focus boxes.
+  div.sidecontentbox {
+    @include focus-box;
+    @include font-focus;
+    padding: $sidebar-padding;
+    margin-bottom: $sidebar-padding;
+
+    // Style message moderators as a button.
+    a.helplink[href^="/message/compose?to"] {
+      @include btn-primary;
+      @include big-sidebar-btn;
+      margin: 0px;
+      margin-bottom: $sidebar-padding;
+      display: block;
+      width: auto;
+      float: none;
+      font-size: 0px;
+
+      &::before {
+        content: 'Message the KiA Moderators';
+        font-size: $font-size-btn;
+      }
+    }
+  }
+
+  // Compress moderation tools.
+  div.sidecontentbox#moderation_tools {
+    li {
+      font-size: $font-size-blur;
+      background-color: transparent;
+      position: relative;
+      a {
+        @include btn-default;
+        display: block;
+        width: auto;
+        text-align: left;
+        margin-left: 30px;
+        &::before {
+          position: absolute;
+          margin-right: -16px;
+          left: 0px;
+        }
+      }
+    }
+  }
+
+  div.account-activity-box {
+    margin-bottom: $sidebar-padding;
+  }
+
+  // Hide create your own subreddit, not interesting to 99% of users.
+  // There are plenty of ways to find this button.
+  div.create {
+    display: none;
+  }
+}
+
+// Side markdown.
+div.side div.md {
+  @include font-focus;
+
+  ul {
+    padding-left: 20px;
+  }
+
+  h1 {
+    font-size: $side_header_font_size;
+    color: $side_header_color;
+    margin-top: 10px;
+    margin-bottom: 2px;
+  }
+
+  // Blockquotes on first level is used as boxes and should have no padding.
+  > blockquote {
+    padding: 0px;
+  }
+
+  // Hr's on first level is just used to separate blockquotes and should have no effect.
+  > hr {
+    margin: 0px;
+    margin-bottom: $sidebar-padding;
+  }
+
+  // #1: FIRST BLOCKQUOTE with ul list is dropdown of filters.
+  // Move the dropdown list to top bar next to 'wiki'.
+  blockquote:nth-child(1) {
+    @include reset-box;
+    position: absolute;
+    z-index: 1000;
+    border: none;
+    top: ($sidebar-top + $tabmenu-pad);
+    left: $left-gutter-width;
+    width: $tabmenu-tag-filter-btn-width;
+
+    ul {
+      @include reset-box;
+
+      &:hover > li {
+        display: block;
+      }
+      > li {
+        display: block;
+      }
+      > li:first-child {
+        @include btn-primary;
+        width: $tabmenu-tag-filter-btn-width - $btn-padding * 2;
+      }
+      > li + li {
+        display: none;
+        padding: 4px 5px;
+        margin: 0px;
+        width: 90%;
+        border: 0px;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        text-align: center;
+
+        @include focus-fill;
+
+        &:hover {
+          @include focus-fill3;
+        }
+        a {
+          @include nm-low-opacity;
+        }
+        a[href$=uv] {
+          @include std-link-flair($tag_color_unverified);
+        }
+        a[href$=ru] {
+          @include std-link-flair($tag_color_rumor);
+        }
+        a[href$=vf] {
+          @include std-link-flair($tag_color_verified);
+        }
+        a[href$=pe] {
+          @include std-link-flair($tag_color_people);
+        }
+        a[href$=ha] {
+          @include std-link-flair($tag_color_happenings);
+        }
+        a[href$=id] {
+          @include std-link-flair($tag_color_ideas);
+        }
+        a[href$=bc] {
+          @include std-link-flair($tag_color_goal);
+        }
+        a[href$=ed] {
+          @include std-link-flair($tag_color_editorial);
+        }
+        a[href$=mt] {
+          @include std-link-flair($tag_color_meta);
+        }
+        a[href$=dr] {
+          @include std-link-flair($tag_color_drama);
+        }
+        a[href$=hu] {
+          @include std-link-flair($tag_color_humor);
+        }
+        a[href$=st] {
+          @include showerthought-flair;
+        }
+        a[href$=ds] {
+          @include std-link-flair($tag_color_discussion);
+        }
+        a[href$=ot] {
+          @include std-link-flair($tag_color_off_topic);
+        }
+        a[href$=et] {
+          @include std-link-flair($tag_color_ethics);
+        }
+        a[href$=in] {
+          @include std-link-flair($tag_color_industry);
+        }
+      }
+      > li:nth-child(2) {
+        border-radius: 4px 4px 0px 0px;
+        padding-top: 8px;
+      }
+      > li:last-child {
+        border-radius: 0px 0px 4px 4px;
+        padding-bottom: 8px;
+      }
+    }
+
+    // Day/night mode selection.
+    h1 {
+      @include reset-box;
+      font-size: 0px;
+      overflow: visible;
+
+      position: absolute;
+      z-index: 1000;
+      top: 0px;
+      left: $tabmenu-tag-filter-btn-width + $sidebar-padding;
+
+      a {
+        @include reset-box;
+        @include btn-primary;
+        font-size: 0px;
+        overflow: visible;
+      }
+      a[href$='#nm'] {
+        @include icon-tabmenu-custom($asset_nm_moon);
+        @include tooltip('Enable night mode.');
+        display: block;
+        html[lang*='nm'] & {
+          display: none;
+        }
+      }
+      a[href$='#dm'] {
+        @include icon-tabmenu-custom($asset_nm_sun);
+        @include tooltip('Enable day mode.');
+        display: none;
+        html[lang*=nm] & {
+          display: block;
+        }
+      }
+    }
+  }
+
+  // #2: Blockquote divider.
+  hr:nth-child(2) {
+    display: none;
+  }
+
+  // #3: Linkbar.
+  blockquote:nth-child(3) {
+    display: block;
+    position: absolute;
+    z-index: 1000;
+    border: none;
+    margin: 5px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    height: $linkbar-height;
+    top: $linkbar-top;
+    left: $left-gutter-width;
+    right: 0px;
+    color: #aaa;
+    font-weight: normal;
+
+    @include nm-low-opacity;
+
+    a {
+      color: #fff;
+      font-weight: normal;
+    }
+  }
+
+  // #4: Blockquote divider.
+  hr:nth-child(4) {
+    display: none;
+  }
+
+  // Rest of blockquotes are focus box elements.
+  blockquote:nth-child(n+5) {
+    @include focus-box;
+    margin: 0px;
+    padding: $sidebar-padding;
+
+    > *:first-child {
+      margin-top: 0px;
+    }
+  }
 }
 
 div.content[role=main] {
-  background-color: $color-focus-bg;
+  @include reset-box;
+  @include focus-bg;
   padding: $sidebar-padding;
   padding-right: 0px;
   float: none;
   position: relative;
-  margin: 0px;
-  left: 0px;
-  right: 0px; //'($sidebar-width - $sidebar-padding * 2);
   width: auto;
   z-index: 100;
   @include main-box-shadow;
@@ -1234,7 +1356,7 @@ div.content[role=main] {
 
   > div#siteTable {
     > div.thing.even {
-      background-color: $color-focus-fill2;
+      @include focus-fill2
     }
     > div.thing {
       @include focus-box;
@@ -1307,15 +1429,13 @@ div.content[role=main] {
       }
     }
 
-    form.usertext {
+    @at-root form.usertext {
       textarea {
-        background-color: $color-focus-fill;
+        @include focus-box;
         background-image: url($asset_comment);
         background-repeat: no-repeat;
         background-size: auto 100%;
         background-position: top left;
-        border-color: $color-focus-border;
-        background-color: $color-focus-fill;
         &:focus {
           background-image: none;
         }
@@ -1340,6 +1460,8 @@ div.content[role=main] {
       // More compact root comments.
       margin-left: 0px;
       .child {
+        @include focus-box;
+        border: 0px solid;
         border-left: 1px solid $color-focus-border;
       }
 
@@ -1353,7 +1475,7 @@ div.content[role=main] {
   body.submit-page & h1:first-child {
     display: none;
   }
-  >form.submit.content {
+  @at-root form.submit.content {
     margin: 0px;
     padding: 0px;
 
@@ -1500,6 +1622,9 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
     background-repeat: no-repeat;
     background-position: bottom right;
     content: '';
+    html[lang*='nm'] & {
+      background-image: url($asset_vivian_night);
+    }
   }
 
   // Tabmenu dark stripe.
@@ -1517,6 +1642,9 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
     padding: 0px;
     content: '';
     z-index: -1;
+    html[lang*='nm'] & {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
   }
 
   .footer {
@@ -1525,6 +1653,10 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
     margin-bottom: 50px;
     a, span {
       @include reddit-site;
+    }
+
+    div.col {
+      @include blur;
     }
   }
 }
