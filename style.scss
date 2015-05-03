@@ -43,6 +43,8 @@ $color-blur-bg: #333;
 $color-blur-fg: #aaa;
 $color-blur-border: #aaa;
 
+$color-alert-fg: #f33;
+
 $color-upvote: #33b515;
 $color-downvote: #8e1dc9;
 
@@ -90,6 +92,18 @@ $tag_color_industry: #b1af9c;
 $side_header_color: #888;
 $side_header_font_size: 16px;
 
+@mixin reset-box {
+  display: block;
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  border: 0px none transparent;
+  border-radius: 0px;
+  background-color: transparent;
+}
+
 @mixin reset-text {
   font-family: inherit;
   font-size: inherit;
@@ -109,6 +123,12 @@ $side_header_font_size: 16px;
   @include reset-text;
   color: $color-blur-fg;
   font-size: $font-size-blur;
+}
+
+@mixin font-form-field {
+  @include reset-text;
+  color: $color-focus-fg;
+  font-size: $font-size-btn;
 }
 
 @mixin focus-box {
@@ -581,10 +601,20 @@ $btn-padding: 12px;
   }
 }
 
+@mixin box-shadow($x, $y, $br, $sr, $color) {
+  -webkit-box-shadow: $x $y $br $sr $color;
+  -moz-box-shadow: $x $y $br $sr $color;
+  box-shadow: $x $y $br $sr $color;
+}
+
+@mixin border-box {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 @mixin main-box-shadow {
-  -webkit-box-shadow: -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow:    -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
-  box-shadow:         -15px 15px 15px 0px rgba(0, 0, 0, 0.4);
+  @include box-shadow(-10px, 15px, 15px, 0px, rgba(0, 0, 0, 0.4));
 }
 
 // General upvote/downvote style.
@@ -669,6 +699,7 @@ html {
   #sr-header-area {
     @include reddit-srarea;
     @include font-blur;
+
     a, span {
       @include reddit-srarea;
       @include font-blur;
@@ -938,19 +969,6 @@ div.side {
       div.nub {
         display: none;
       }
-
-      /* add this note to the submit link page instead
-      &::after {
-        content: 'Note that your account must be older than 3 days. Read the rules before posting. Your post may be deleted automatically if it breaks one or more rules.';
-        display: none;
-        font-size: $font-size-focus;
-        margin-bottom: $sidebar-padding;
-        line-height: normal;
-        font-weight: normal;
-      }
-      &:hover::after {
-        display: block;
-      }*/
     }
 
     // Hide text submit. We used combined button.
@@ -1189,10 +1207,13 @@ div.content[role=main] {
   background-color: $color-focus-bg;
   padding: $sidebar-padding;
   padding-right: 0px;
-  margin: 0px;
-  margin-right: ($sidebar-width - $sidebar-padding);
-  z-index: 100;
+  float: none;
   position: relative;
+  margin: 0px;
+  left: 0px;
+  right: 0px; //'($sidebar-width - $sidebar-padding * 2);
+  width: auto;
+  z-index: 100;
   @include main-box-shadow;
 
   // Prevent floating content from escaping.
@@ -1244,6 +1265,7 @@ div.content[role=main] {
     }
   }
 
+  // Comment page.
   > div.commentarea {
     padding: $sidebar-padding;
 
@@ -1293,6 +1315,7 @@ div.content[role=main] {
         background-size: auto 100%;
         background-position: top left;
         border-color: $color-focus-border;
+        background-color: $color-focus-fill;
         &:focus {
           background-image: none;
         }
@@ -1325,7 +1348,142 @@ div.content[role=main] {
       }
     }
   }
+
+  // Submit page.
+  body.submit-page & h1:first-child {
+    display: none;
+  }
+  >form.submit.content {
+    margin: 0px;
+    padding: 0px;
+
+    ul.tabmenu {
+      font-size: 0px;
+      padding: 0px;
+      a.choice {
+        @include btn-primary;
+      }
+      li.selected a {
+        @extend a:active;
+      }
+      a.link-button {
+        font-size: 0px;
+        &::before {
+          content: 'Submit link';
+          font-size: $font-size-btn;
+        }
+      }
+      a.text-button {
+        font-size: 0px;
+        margin-left: $sidebar-padding;
+        &::before {
+          content: 'Text/self post';
+          font-size: $font-size-btn;
+        }
+      }
+    }
+    div.spacer {
+      @include reset-box;
+      margin-bottom: $sidebar-padding;
+      div, span {
+        @include font-form-field;
+      }
+      #title-field, #url-field, #text-field, #reddit-field {
+        span.title {
+          font-weight: bold;
+        }
+      }
+    }
+    textarea, input[type=text], input[type=url] {
+      border: 1px solid $color-focus-border;
+      background-color: $color-focus-fill;
+      width: 100%;
+      @include border-box;
+      @include font-form-field;
+    }
+    div.infobar {
+      @include reset-box;
+    }
+    div.roundfield {
+      @include reset-box;
+
+      div {
+        @include reset-box;
+      }
+      div.roundfield-content {
+        margin-top: 5px;
+      }
+    }
+    span.title, span.gray, label {
+      @include font-form-field;
+    }
+    // Remove suggested reddits, bloated distraction.
+    div#suggested-reddits {
+      display: none;
+    }
+    div#suggest-title button {
+      @include btn-primary;
+      @include btn-sm;
+    }
+    button[type=submit] {
+      @include btn-success;
+    }
+    $submit-width: 600px;
+    div.formtabs-content {
+      margin-top: $sidebar-padding;
+      border: 0px none transparent;
+      padding: $sidebar-padding;
+      margin-bottom: 0px;
+      max-width: $submit-width;
+      width: 100%;
+      @include focus-box;
+      border-bottom-width: 0px;
+
+      .spacer:first-child {
+        &::after {
+          @include font-form-field;
+          content: 'When posting to /r/KotakuInAction: Your account MUST be older than 3 days. Please read the rules before posting. You can find the rules in the sidebar. Your post may be deleted automatically if it breaks one or more rules. When in doubt, message the moderators by using the button in the bottom of the sidebar.';
+          display: block;
+          margin: $sidebar-padding 0px;
+        }
+      }
+
+      // Remove pointless "options" title above checkbox.
+      .spacer:last-child span.title {
+        display: none;
+      }
+
+      + div.info-notice {
+        display: block;
+        @include font-form-field;
+        @include reset-box;
+        @include focus-box;
+        padding: $sidebar-padding;
+        max-width: $submit-width;
+        width: 100%;
+        border-top-width: 0px;
+        border-bottom-width: 0px;
+        padding-top: 0px;
+
+        + input[name=resubmit] + div.spacer {
+          max-width: $submit-width;
+          width: 100%;
+          @include reset-box;
+          @include focus-box;
+          padding: $sidebar-padding;
+          display: block;
+          border-top-width: 0px;
+        }
+      }
+    }
+  }
 }
+
+// Hide filter by tag on submit page. It's distracting.
+body.submit-page div.side div.usertext-body div.md blockquote:first-child {
+  display: none;
+}
+
 
 // Footer
 .footer-parent {
@@ -1369,4 +1527,16 @@ div.content[role=main] {
       @include reddit-site;
     }
   }
+}
+
+// Header gradient. Absolute last position in document to only affect background texture.
+body::after {
+  content: ' ';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: $srarea-height;
+  z-index: -10000;
+  @include box-shadow(0px, 0px, 150px, 20px, rgba(0, 0, 0, 0.5));
 }
