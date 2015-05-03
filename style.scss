@@ -139,7 +139,7 @@ $side_header_font_size: 16px;
 }
 
 @mixin font-form-field {
-  @include reset-text;
+  @include font-focus;
   color: $color-focus-fg;
   font-size: $font-size-btn;
 }
@@ -1517,8 +1517,7 @@ div.content[role=main] {
       }
     }
     textarea, input[type=text], input[type=url] {
-      border: 1px solid $color-focus-border;
-      background-color: $color-focus-fill;
+      @include focus-box;
       width: 100%;
       @include border-box;
       @include font-form-field;
@@ -1586,6 +1585,10 @@ div.content[role=main] {
         border-top-width: 0px;
         border-bottom-width: 0px;
         padding-top: 0px;
+
+        &::before {
+          @include nm-low-opacity;
+        }
 
         + input[name=resubmit] + div.spacer {
           max-width: $submit-width;
