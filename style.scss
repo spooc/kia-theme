@@ -51,7 +51,14 @@ $color-alert-fg: #f33;
 $color-upvote: #33b515;
 $color-downvote: #8e1dc9;
 
-$nm-general-opacity: 0.4;
+$nm-brightness: 70%;
+$nm-general-opacity: $nm-brightness / 100%;
+$nm-darken-factor: 100% - $nm-brightness;
+
+@function nm_darken($color, $factor:0%) {
+  @return darken($color, $nm-darken-factor + $factor);
+}
+
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -124,7 +131,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-focus;
 
   html[lang*='nm'] & {
-    color: darken($color-focus-fill, 60%);
+    color: nm_darken($color-focus-fill);
   }
 }
 
@@ -134,7 +141,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-blur;
 
   html[lang*='nm'] & {
-    color: darken($color-focus-fill, 70%);
+    color: nm_darken($color-focus-fill, 10%);
   }
 }
 
@@ -172,7 +179,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-focus;
 
   html[lang*='nm'] & {
-    color: darken($color-focus-fill, 60%);
+    color: nm_darken($color-focus-fill);
     border-color: darken($color-focus-border, 83%);
   }
 }
@@ -195,7 +202,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-blur;
 
   html[lang*='nm'] & {
-    color: darken($color-blur-fg, 50%);
+    color: nm_darken($color-blur-fg, -10%);
     border-color: darken($color-blur-border, 50%);
   }
 }
@@ -515,7 +522,7 @@ $btn-padding: 12px;
 // Nightmode hacks.
 html[lang*='nm'] {
   a, .thing .title a {
-    color: darken(#3ff, 43%);
+    color: nm_darken($color-focus-fill);
   }
   a:visited, .thing.visited .title a {
     color: lighten(#551a8b, 5%);
