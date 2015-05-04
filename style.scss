@@ -254,7 +254,9 @@ $btn-padding: 12px;
 
 
 @mixin button-variant-raw($fg, $bg, $bd) {
-  color: $fg;
+
+  // Important for RES.
+  color: $fg !important;
   background-color: $bg;
   border-color: $bd;
 
@@ -540,12 +542,22 @@ $btn-padding: 12px;
 
 // Nightmode hacks.
 html[lang*='nm'] {
+  // !important because of RES.
   a, .thing .title a {
     color: nm_darken($nm-link-color) !important;
   }
   a:visited, .thing.visited .title a {
     color: nm_darken($nm-link-color-visited) !important;
   }
+  // RES overrides.
+  .RES-keyNav-activeElement {
+    background-color: #373737 !important;
+
+    .title a {
+      color: #fff !important;
+    }
+  }
+
   // Just lower opacity of things that is to tedius to adjust color of.
   .midcol > div, div.expando-button,
   div.thing p.title a:first-child::before {
