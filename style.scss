@@ -192,6 +192,18 @@ $side_header_font_size: 16px;
   @include focus;
 }
 
+@mixin form-field-box {
+    @include focus-box;
+    border-width: 3px;
+    border-radius: 5px;
+
+    border-color: $color-focus-fill3;
+    html[lang*='nm'] & {
+      background-color: darken($color-focus-fill3, 85%);
+    }
+}
+
+
 @mixin focus-bg {
   background-color: $color-focus-bg;
   html[lang*='nm'] & {
@@ -420,8 +432,22 @@ $btn-padding: 12px;
   }
 }
 
-// TODO: These can be more generic.
+// Standard link flairs have fixed lengths.
+@mixin std-link-flair($color) {
+  background-color: $color;
+  color: $color-focus-fill;
+  text-align: center;
+  width: 70px;
+
+  html[lang*='nm'] & {
+    color: nm_darken($color-focus-fill);
+    background-color: nm_darken($color, 100%);
+    border-color: nm_darken($color-focus-fill3);
+  }
+}
+
 @mixin content-title {
+  /*
   > a:first-child {
     // Has no category yet, show temporary flair.
     &::before {
@@ -433,11 +459,22 @@ $btn-padding: 12px;
       position: relative;
       top: -.25em;
     }
-  }
+  }*/
   @at-root .linkflairlabel {
+    @include focus-box;
+    @include focus-fill2;
+
     font-size: 10px;
     position: relative;
     top: .3em;
+
+    display: inline-block;
+    padding: 1px;
+    height: 12px;
+    max-height: 15px;
+    border: 1px solid #ddd;
+    border-radius: 0px;
+    margin-right: 5px;
 
     &[title=UNVERIFIED] {
       @include std-link-flair($tag_color_unverified);
@@ -490,34 +527,12 @@ $btn-padding: 12px;
   }
 }
 
-// Standard link flairs have fixed lengths.
-@mixin std-link-flair($color) {
-  font-size: 10px;
-  background-color: $color;
-  color: $color-focus-fill;
-  text-align: center;
-  display: inline-block;
-  width: 70px;
-  padding: 1px;
-  max-width: inherit;
-  max-height: 15px;
-  border: 1px solid #ddd;
-  border-radius: 0px;
-  margin-right: 5px;
-
-  html[lang*='nm'] & {
-    color: nm_darken($color-focus-fill);
-    background-color: nm_darken($color, 100%);
-    border-color: nm_darken($color-focus-fill3);
-  }
-
-}
-
 // This flair has hack that shortens the excessive length.
 @mixin showerthought-flair {
   @include std-link-flair($tag_color_showerthought);
 
   // Tag is too long, shorten it.
+  max-width: none;
   font-size: 0px;
   &::after {
     content: 'SHOWERTH.';
@@ -589,10 +604,9 @@ div.thing {
   div.entry {
     > p.title {
       > span.domain {
-        font-size: 0px;
+        @include font-blur;
         a {
           @include font-blur;
-          float: right;
         }
       }
     }
@@ -631,6 +645,9 @@ div.thing {
   }
 }
 
+// Reset weird coloring rule in reddit stylesheet.
+.titlebox h1 a {color: #0079d3;}
+
 // General markdown style.
 div.md {
   @include font-focus;
@@ -666,7 +683,7 @@ div.md {
   }
 
   .-lists, ul, ol {
-    padding-left: 1em;
+    padding-left: 2em;
   }
 
   html[lang*='nm'] & {
@@ -840,6 +857,7 @@ html {
 
 // Move user box up into subreddit area to get it out of the way.
 #header-bottom-right {
+  @include reset-box;
   position: absolute;
   top: 0px;
   height: $srarea-height;
@@ -1569,10 +1587,11 @@ div.content[role=main] {
     @at-root form.usertext {
       textarea {
         @include focus-box;
+        @include form-field-box;
         background-image: url($asset_comment);
         background-repeat: no-repeat;
-        background-size: auto 100%;
-        background-position: top left;
+        background-size: auto 100px;
+        background-position: bottom left;
         html[lang*='nm'] & {
           background-image: url($asset_comment_nm);
         }
@@ -1621,8 +1640,9 @@ div.content[role=main] {
     display: none;
   }
   @at-root form.submit.content {
-    margin: 0px;
-    padding: 0px;
+    @include reset-box;
+    @include focus-box;
+    padding: $sidebar-padding;
 
     ul.tabmenu {
       font-size: 0px;
@@ -1666,6 +1686,7 @@ div.content[role=main] {
       width: 100%;
       @include border-box;
       @include font-form-field;
+      @include form-field-box;
     }
     div.infobar {
       @include reset-box;
@@ -1703,6 +1724,7 @@ div.content[role=main] {
       max-width: $submit-width;
       width: 100%;
       @include focus-box;
+      @include focus-fill2;
       border-bottom-width: 0px;
 
       .spacer:first-child {
@@ -1724,6 +1746,7 @@ div.content[role=main] {
         @include font-form-field;
         @include reset-box;
         @include focus-box;
+        @include focus-fill2;
         padding: $sidebar-padding;
         max-width: $submit-width;
         width: 100%;
@@ -1740,6 +1763,7 @@ div.content[role=main] {
           width: 100%;
           @include reset-box;
           @include focus-box;
+          @include focus-fill2;
           padding: $sidebar-padding;
           display: block;
           border-top-width: 0px;
