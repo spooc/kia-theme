@@ -684,9 +684,6 @@ div.md {
 
 // Markdown editor style.
 html.res {
-  .markdownEditor .edit-btn:not(.btn-macro) {
-    @include btn-default;
-  }
 }
 
 // This fixes some issues with reddit companion.
