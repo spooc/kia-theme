@@ -55,10 +55,12 @@ $nm-brightness: 70%;
 $nm-general-opacity: $nm-brightness / 100%;
 $nm-darken-factor: 100% - $nm-brightness;
 
-@function nm_darken($color, $factor:0%) {
-  @return darken($color, $nm-darken-factor + $factor);
+@function nm_darken($color, $factor:100%) {
+  @return darken($color, $nm-darken-factor * ($factor / 100%));
 }
 
+$nm-link-color: #90e8da;
+$nm-link-color-visited: darken($nm-link-color, 20%);
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -141,7 +143,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-blur;
 
   html[lang*='nm'] & {
-    color: nm_darken($color-focus-fill, 10%);
+    color: nm_darken($color-focus-fill3);
   }
 }
 
@@ -202,7 +204,7 @@ $side_header_font_size: 16px;
   font-size: $font-size-blur;
 
   html[lang*='nm'] & {
-    color: nm_darken($color-blur-fg, -10%);
+    color: nm_darken($color-blur-fg);
     border-color: darken($color-blur-border, 50%);
   }
 }
@@ -274,7 +276,7 @@ $btn-padding: 12px;
 @mixin button-variant-nmc($fg, $bg, $bd, $fgo, $bgo, $bdo) {
   @include button-variant-raw($fg, $bg, $bd);
   html[lang*='nm'] & {
-    @include button-variant-raw(darken($fg, $fgo), darken($bg, $bgo), darken($bd, $bdo));
+    @include button-variant-raw(nm_darken($fg, $fgo), nm_darken($bg, $bgo), nm_darken($bd, $bdo));
   }
 }
 
@@ -479,7 +481,7 @@ $btn-padding: 12px;
 @mixin std-link-flair($color) {
   font-size: 10px;
   background-color: $color;
-  color: #fff;
+  color: $color-focus-fill;
   text-align: center;
   display: inline-block;
   width: 70px;
@@ -489,6 +491,13 @@ $btn-padding: 12px;
   border: 1px solid #ddd;
   border-radius: 0px;
   margin-right: 5px;
+
+  html[lang*='nm'] & {
+    color: nm_darken($color-focus-fill);
+    background-color: nm_darken($color, 150%);
+    border-color: nm_darken($color-focus-fill3);
+  }
+
 }
 
 // This flair has hack that shortens the excessive length.
@@ -522,13 +531,13 @@ $btn-padding: 12px;
 // Nightmode hacks.
 html[lang*='nm'] {
   a, .thing .title a {
-    color: nm_darken($color-focus-fill);
+    color: nm_darken($nm-link-color);
   }
   a:visited, .thing.visited .title a {
-    color: lighten(#551a8b, 5%);
+    color: nm_darken($nm-link-color-visited);
   }
   // Just lower opacity of things that is to tedius to adjust color of.
-  span.linkflairlabel, .midcol > div, div.expando-button,
+  .midcol > div, div.expando-button,
   div.thing p.title a:first-child::before {
     opacity: $nm-general-opacity;
   }
@@ -1029,6 +1038,8 @@ div.side {
       > div.leavemoderator, > form.leavecontributor-button, > form.flairtoggle {
         background-color: transparent;
         @include reset-text;
+        @include font-blur;
+
         color: $color-focus-fg;
         font-size: $font-size-blur;
         padding: 0px $sidebar-padding;
