@@ -681,6 +681,12 @@ div.md {
     }
   }
 }
+
+// Markdown editor style.
+html.res {
+  .markdownEditor .edit-btn:not(.btn-macro) {
+    @include btn-default;
+  }
 }
 
 // This fixes some issues with reddit companion.
@@ -971,6 +977,18 @@ div.side {
       }
       div.nub {
         display: none;
+      }
+    }
+
+    .subButtons {
+      html.res & {
+        padding-top: .5em;
+      }
+    }
+
+    .subscribers {
+      html.res & {
+        margin-top: .75em;
       }
     }
 
@@ -1434,6 +1452,30 @@ div.content[role=main] {
 
   > div.commentarea {
     @include focus-box;
+
+    // RES screws with child comment background color.
+    html[lang*='nm'] & {
+      .comment {
+        border-color: nm_darken(#666) !important;
+      }
+      .comment .comment {
+        background-color: darken($color-focus-fill, 85%) !important;
+      }
+
+      .RES-keyNav-activeElement .md,
+      .RES-keyNav-activeElement.entry .noncollapsed {
+        background-color: transparent !important;
+      }
+
+      .new-comment .usertext-body {
+        background-color: nm_darken(#666);
+      }
+    }
+
+    .new-comment .usertext-body {
+      margin: 5px 0;
+      padding: 0 8px;
+    }
   }
 
   // Disable all framing for usertext body for cleaner look. Less is more.
