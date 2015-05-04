@@ -289,6 +289,10 @@ $btn-padding: 12px;
 @mixin btn-default {
   @include btn;
   @include button-variant-nmc(#333, #fff, #ccc, 100%, 75%, 60%);
+
+  html[lang*='nm'] & {
+    @include button-variant-nmc(#b3b3b3, #1f1f1f, #000, 100%, 75%, 60%);
+  }
 }
 
 // Bootstrap flat primary button.
