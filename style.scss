@@ -432,6 +432,21 @@ $btn-padding: 12px;
   }
 }
 
+
+@mixin link-flair-base {
+  @include focus-box;
+  @include focus-fill2;
+  font-size: 10px;
+  line-height: normal;
+  display: inline-block;
+  padding: 1px;
+  height: 12px;
+  max-height: 15px;
+  border: 1px solid #ddd;
+  border-radius: 0px;
+  margin-right: 5px;
+}
+
 // Standard link flairs have fixed lengths.
 @mixin std-link-flair($color) {
   background-color: $color;
@@ -461,20 +476,9 @@ $btn-padding: 12px;
     }
   }*/
   @at-root .linkflairlabel {
-    @include focus-box;
-    @include focus-fill2;
-
-    font-size: 10px;
+    @include link-flair-base;
     position: relative;
     top: .3em;
-
-    display: inline-block;
-    padding: 1px;
-    height: 12px;
-    max-height: 15px;
-    border: 1px solid #ddd;
-    border-radius: 0px;
-    margin-right: 5px;
 
     &[title=UNVERIFIED] {
       @include std-link-flair($tag_color_unverified);
@@ -1308,6 +1312,7 @@ div.side div.md {
           @include focus-fill3;
         }
         a {
+          @include link-flair-base;
           @include nm-low-opacity;
         }
         a[href$=uv] {
