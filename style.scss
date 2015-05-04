@@ -531,10 +531,10 @@ $btn-padding: 12px;
 // Nightmode hacks.
 html[lang*='nm'] {
   a, .thing .title a {
-    color: nm_darken($nm-link-color);
+    color: nm_darken($nm-link-color) !important;
   }
   a:visited, .thing.visited .title a {
-    color: nm_darken($nm-link-color-visited);
+    color: nm_darken($nm-link-color-visited) !important;
   }
   // Just lower opacity of things that is to tedius to adjust color of.
   .midcol > div, div.expando-button,
