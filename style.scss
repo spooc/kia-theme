@@ -633,6 +633,54 @@ div.thing {
 // General markdown style.
 div.md {
   @include font-focus;
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1em;
+    margin: 0.25em 0;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 3em;
+  }
+
+  h2 {
+    font-size: 2.5em;
+  }
+
+  h3 {
+    font-size: 2em;
+  }
+
+  h4 {
+    font-size: 1.5em;
+  }
+
+  h5 {
+    font-size: 1em;
+  }
+
+  h6 {
+    font-size: .5em;
+  }
+
+  .-lists, ul, ol {
+    padding-left: 1em;
+  }
+
+  html[lang*='nm'] & {
+
+    blockquote, del {
+      color: nm_darken(#ccc);
+    }
+
+    code, pre {
+      color: nm_darken(#eee);
+      background-color: nm_darken(#878787);
+      border-color: black;
+    }
+  }
+}
 }
 
 // This fixes some issues with reddit companion.
