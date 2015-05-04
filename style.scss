@@ -60,7 +60,7 @@ $nm-darken-factor: 100% - $nm-brightness;
 }
 
 $nm-link-color: #90e8da;
-$nm-link-color-visited: darken($nm-link-color, 20%);
+$nm-link-color-visited: #dd90ef;
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
