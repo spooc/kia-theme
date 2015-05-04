@@ -1486,6 +1486,11 @@ div.content[role=main] {
         @include focus-box;
         border: 0px solid;
         border-left: 1px solid $color-focus-border;
+
+        html[lang*='nm'] & {
+          border-color: nm_darken(#aaa);
+        }
+
       }
 
       form.usertext {
