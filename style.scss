@@ -29,7 +29,7 @@ $asset_vote_up: asset_url('vote-up', 'png');
 $asset_vote_down: asset_url('vote-down', 'png');
 
 // ********* Typography configuration. ********* //
-$font-size-focus: 14px;   // General font size for text that should be in focus.
+$font-size-focus: 12px;   // General font size for text that should be in focus.
 $font-size-blur: 10px;    // Small font size for text that should not be in focus
                           // and is very likely to not be interesting for user.
 $font-size-btn: 14px;     // Button font sizes.
@@ -1475,6 +1475,12 @@ div.content[role=main] {
     .new-comment .usertext-body {
       margin: 5px 0;
       padding: 0 8px;
+    }
+
+    @at-root .comments-page {
+      .entry .usertext-body > div.md, .usertext-body > div.md {
+        font-size: 14px;
+      }
     }
   }
 
