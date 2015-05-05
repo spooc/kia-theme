@@ -88,8 +88,8 @@ $tabmenu-tag-filter-btn-width: 105px; // First button in tabmenu.
 
 // ********* Tag color configuration. ********* //
 $tag_color_unverified: #e01919;
-$tag_color_rumor: #000000;
-$tag_color_verified: #25c819;
+$tag_color_rumor: #455184;
+$tag_color_verified: #13e800;
 $tag_color_people: #1a80ed;
 $tag_color_happenings: #ed871a;
 $tag_color_ideas: #828282;
@@ -103,6 +103,8 @@ $tag_color_discussion: #1c9328;
 $tag_color_off_topic: #5600bf;
 $tag_color_ethics: #9e0000;
 $tag_color_industry: #b1af9c;
+$tag_color_censorship: #000000;
+$tag_color_socjus: #faaafa;
 
 $side_header_color: #888;
 $side_header_font_size: 16px;
@@ -527,6 +529,12 @@ $btn-padding: 12px;
     }
     &[title=INDUSTRY] {
       @include std-link-flair($tag_color_industry);
+    }
+    &[title=SOCJUS] {
+      @include std-link-flair($tag_color_socjus);
+    }
+    &[title=CENSORSHIP] {
+      @include std-link-flair($tag_color_censorship);
     }
   }
 }
@@ -1113,6 +1121,7 @@ div.side {
         @include font-focus;
         @include focus-box;
         display: block;
+        position: relative;
         padding: $sidebar-padding;
         margin: 0px;
         margin-bottom: $sidebar-padding;
@@ -1363,6 +1372,12 @@ div.side div.md {
         a[href$=in] {
           @include std-link-flair($tag_color_industry);
         }
+        a[href$=sj] {
+          @include std-link-flair($tag_color_socjus);
+        }
+        a[href$=cs] {
+          @include std-link-flair($tag_color_censorship);
+        }
       }
       > li:nth-child(2) {
         border-radius: 4px 4px 0px 0px;
@@ -1417,20 +1432,23 @@ div.side div.md {
 
   // #3: Linkbar.
   blockquote:nth-child(3) {
+    @include reset-box;
+    @include reset-text;
+
     display: block;
     position: absolute;
     z-index: 1000;
     border: none;
     margin: 5px 0px;
     overflow: hidden;
-    text-overflow: ellipsis;
 
     height: $linkbar-height;
     top: $linkbar-top;
     left: $left-gutter-width;
     right: 0px;
-    color: #aaa;
-    font-weight: normal;
+
+    font-size: 12px;
+    text-overflow: ellipsis;
 
     @include nm-low-opacity;
 
