@@ -39,7 +39,7 @@ $font-size-btn: 14px;     // Button font sizes.
 $color-focus-fill: #fff;
 $color-focus-fill2: #f8f8f8;
 $color-focus-fill3: #ccc;
-$color-focus-bg: #f8f8f8;
+$color-focus-bg: #eee;
 $color-focus-fg: #333;
 $color-focus-border: #e2e2e2;
 
@@ -69,10 +69,10 @@ $left-gutter-width: 60px; // The left gutter is where the upvotes and downvotes 
                           // This is the first clear "column" in the grid.
 
 $srarea-height: 18px;     // Subreddit area height. The first row.
-$logoarea-height: 90px;   // Logo area height. The second row.
-$logoarea-vpadding: 7px;  // How much vertical paddning there should be around the logo.
+$logoarea-height: 75px;   // Logo area height. The second row.
+$logoarea-vpadding: 0px;  // How much vertical paddning there should be around the logo.
 
-$linkbar-height: 30px;    // Linkbar area height. The third row.
+$linkbar-height: 24px;    // Linkbar area height. The third row.
 $linkbar-top: ($srarea-height + $logoarea-height);
 
 $sidebar-padding: 10px;
@@ -80,11 +80,23 @@ $sidebar-inner-width: 300px;
 $sidebar-top: ($linkbar-top + $linkbar-height);
 $sidebar-width: ($sidebar-padding * 2 + $sidebar-inner-width);
 
-$tabmenu-inner-height: 30px;
-$tabmenu-pad: 7px;
+$tabmenu-inner-height: 28px;
+$tabmenu-pad: 4px;
+$tabmenu-cat-margin: 12px;
 $tabmenu-height: ($tabmenu-pad + $tabmenu-inner-height + $tabmenu-pad);
 $tabmenu-min-width: ($full_min_width - $sidebar-width);
 $tabmenu-tag-filter-btn-width: 105px; // First button in tabmenu.
+
+
+// ********* Media queries. ********* //
+
+$respond-min-hgalign: 805px; // 1. Below this screen size and we stop gutter aligning header.
+$respond-min-sidelvl: 740px; // 2. Below this screen size we disable the sidebar injecting
+                             //    itself upwards and position search in header.
+$respond-min-sidebar: 600px; // 3. Below this screen size we cannot have a sidebar anymore.
+
+$mexpr-phone: "only screen and (min-device-width: 320px) and (max-device-width: 480px)";
+$mexpr-not-phone: "(min-device-width: 481px)";
 
 // ********* Tag color configuration. ********* //
 $tag_color_unverified: #e01919;
@@ -333,10 +345,11 @@ $btn-padding: 12px;
 }
 
 @mixin big-sidebar-btn {
-  width: (300px - 12 * 2);
+  @include border-box;
+  padding-left: 0px;
+  padding-right: 0px;
+  height: 41px;
   font-size: 16px;
-  height: 29px;
-  background-image: none;
   line-height: 29px;
 }
 
@@ -348,12 +361,20 @@ $btn-padding: 12px;
   overflow: hidden;
 }
 
-@mixin icon-tabmenu-custom($icon_url) {
-  position: relative;
-  padding: 0px;
+@mixin btn-tabmenu-dim {
   display: inline-block;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  $inner-height: $tabmenu-inner-height - $btn-border * 2;
+  height: $inner-height;
+  line-height: $inner-height;
+}
+
+@mixin icon-tabmenu-custom($icon_url) {
+  @include btn-tabmenu-dim;
+  padding: 0px;
+  position: relative;
   width: $tabmenu-inner-height - $btn-border * 2;
-  height: $tabmenu-inner-height - $btn-border * 2;
 
   &::before {
     content: ' ';
@@ -752,6 +773,13 @@ html {
   height: $logoarea-height;
   margin-left: $left-gutter-width;
   line-height: 0px;
+  overflow: hidden;
+
+  // Gutter align unless screen is too small.
+  margin-left: $sidebar-padding;
+  @media only screen and (min-width: $respond-min-hgalign) {
+    margin-left: $left-gutter-width;
+  }
 
   // Hide the element actually intended for the subreddit logo
   // as it links to reddit front page instead of the subreddit.
@@ -762,14 +790,16 @@ html {
   // The reddit name element is used for the logo.
   // An logo asset is used instead which should be changed at will, manually.
   > span.redditname {
-    display: block;
+    @include reset-box;
+    height: $logoarea-height;
+    width: $tabmenu-min-width;
     margin: 0px;
 
     // We hide the text.
     font-size: 0px;
 
     > a {
-      display: block;
+      @include reset-box;
       height: $logoarea-height;
       width: $tabmenu-min-width;
 
@@ -791,12 +821,19 @@ html {
     background-color: transparent;
     top: $sidebar-top;
     right: $sidebar-width;
-    // Leave room on the left for gutter and filter button.
+    // Leave room on the left for the filter button.
     // We place the filter button on the left so new buttons can be added here by RES.
-    left: ($left-gutter-width + $tabmenu-tag-filter-btn-width + $sidebar-padding + $tabmenu-inner-height + $tabmenu_pad);
+    $base-left: ($tabmenu-tag-filter-btn-width + $tabmenu-cat-margin + $tabmenu-inner-height + $tabmenu-cat-margin - $tabmenu-pad);
     height: $tabmenu-inner-height;
     margin: 0px;
     padding: $tabmenu-pad;
+
+    // Gutter align unless screen is too small.
+    left: $base-left;
+    @media only screen and (min-width: $respond-min-hgalign) {
+      left: $left-gutter-width + $base-left;
+    }
+
     // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
     // buttons is inserted (e.g. RES) and screen is too small, but this will break tooltips.
     // We need to prevent this in some other way...
@@ -813,6 +850,7 @@ html {
     }
     li a {
       @include btn-primary;
+      @include btn-tabmenu-dim;
     }
     li.selected a {
       @extend a:active;
@@ -857,7 +895,7 @@ html {
       // Wiki
       li:nth-child(7) {
         // Separate wiki button with 2 units of padding.
-        margin-left: $tabmenu-pad;
+        margin-left: $tabmenu-cat-margin - $tabmenu-pad;
       }
       // Hide promoted, it's not like the admins allow any promoted links here anyway.
       li:nth-child(8) {
@@ -888,11 +926,6 @@ html {
 }
 
 body {
-  // We don't support smaller resolutions than 800x600.
-  // This is the limitations of the design/layout. One does not simply make a CSS Theme that magically
-  // makes a site responsive. You have to build the site from the ground up for that.
-  min-width: 800px;
-
   // Prevent absolute positioning from leaking to the window.
   position: relative;
 
@@ -921,7 +954,18 @@ div.side {
   width: $sidebar-inner-width;
   @include focus-bg;
   font-size: $font-size-focus;
-  @include main-box-shadow;
+  float: right;
+
+  @media only screen and (max-width: $respond-min-sidebar) {
+    // Screen is too small for a visible sidebar.
+    // Move the sidebar to the top and hide it with a vertical scroll.
+    float: none;
+    max-height: 250px;
+    @include border-box;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
 
   // Remove ugly borders.
   .sidecontentbox .content {
@@ -939,19 +983,22 @@ div.side {
     color: $side_header_color;
   }
 
-  &::before {
-    // We utilize the first spacer to move sidebar into header since
-    // this is a waste of space otherwise and it helps clip Vivian.
-    display: block;
-    @include focus-bg;
-    margin-top: -$tabmenu-height - $sidebar-padding;
-    margin-bottom: -$tabmenu-height + $sidebar-padding;
-    margin-left: -$sidebar-padding;
-    padding-left: $sidebar-padding;
-    padding-right: $sidebar-padding;
-    width: $sidebar-inner-width;
-    height: $tabmenu-height;
-    content: '';
+  // We utilize the first spacer to move sidebar into header since
+  // this is a waste of space otherwise and it helps clip Vivian.
+  // We can however only do this on screens that are large enough.
+  @media only screen and (min-width: $respond-min-sidelvl) {
+    &::before {
+      display: block;
+      @include focus-bg;
+      margin-top: -$tabmenu-height - $sidebar-padding;
+      margin-bottom: -$tabmenu-height + $sidebar-padding;
+      margin-left: -$sidebar-padding;
+      padding-left: $sidebar-padding;
+      padding-right: $sidebar-padding;
+      width: $sidebar-inner-width;
+      height: $tabmenu-height;
+      content: '';
+    }
   }
 
   // Style for sidebar spacers and the content inside those spacers.
@@ -964,23 +1011,32 @@ div.side {
     margin: 0;
     padding: 0;
 
-    // Search. Move into header.
-    @at-root form#search {
-      position: absolute;
-      $search-width: 200px;
-      width: $search-width;
-      top: ($sidebar-top / 2) - 10px;
-      right: ($sidebar-inner-width + $sidebar-padding - $search-width);
-      padding-left: 20px;
-      z-index: 1;
+    // Search.
+    form#search {
+      margin-bottom: $sidebar-padding;
 
       input[type=text] {
         border-radius: 10px;
-        width: $search-width;
+        width: 100%;
         @include focus;
       }
       #searchexpando {
         @include focus-box;
+      }
+
+      // Move into header on larger screens.
+      @media only screen and (min-width: $respond-min-sidelvl) {
+        $search-width: 220px;
+        position: absolute;
+        width: $search-width;
+        top: ($sidebar-top / 2) - 10px;
+        right: ($sidebar-inner-width + $sidebar-padding - $search-width);
+        padding-left: 20px;
+        z-index: 1;
+
+        input[type=text] {
+          width: $search-width;
+        }
       }
     }
 
@@ -1068,6 +1124,7 @@ div.side {
           @include btn-success;
           @include big-sidebar-btn;
           font-size: 0px;
+          display: block;
 
           &::before {
             content: 'Subscribe to /r/KotakuInAction';
@@ -1105,7 +1162,8 @@ div.side {
         border-bottom: 0px;
         span.number {
           body.subscriber &::before {
-            display: block;
+            display: inline-block;
+            float: right;
             margin-bottom: $sidebar-padding;
             content: 'You’re a subscriber!';
           }
@@ -1287,8 +1345,13 @@ div.side div.md {
     z-index: 1000;
     border: none;
     top: ($sidebar-top + $tabmenu-pad);
-    left: $left-gutter-width;
     width: $tabmenu-tag-filter-btn-width;
+
+    // Gutter align unless screen is too small.
+    left: $sidebar-padding;
+    @media only screen and (min-width: $respond-min-hgalign) {
+      left: $left-gutter-width;
+    }
 
     ul {
       @include reset-box;
@@ -1301,7 +1364,10 @@ div.side div.md {
       }
       > li:first-child {
         @include btn-primary;
-        width: $tabmenu-tag-filter-btn-width - $btn-padding * 2;
+        @include btn-tabmenu-dim;
+        width: $tabmenu-tag-filter-btn-width;
+        padding-left: 0px;
+        padding-right: 0px;
       }
       > li + li {
         display: none;
@@ -1398,7 +1464,7 @@ div.side div.md {
       position: absolute;
       z-index: 1000;
       top: 0px;
-      left: $tabmenu-tag-filter-btn-width + $sidebar-padding;
+      left: $tabmenu-tag-filter-btn-width + $tabmenu-cat-margin;
 
       a {
         @include reset-box;
@@ -1439,7 +1505,6 @@ div.side div.md {
     position: absolute;
     z-index: 1000;
     border: none;
-    margin: 5px 0px;
     overflow: hidden;
 
     height: $linkbar-height;
@@ -1447,8 +1512,14 @@ div.side div.md {
     left: $left-gutter-width;
     right: 0px;
 
-    font-size: 12px;
-    text-overflow: ellipsis;
+    // Gutter align unless screen is too small.
+    left: $sidebar-padding;
+    @media only screen and (min-width: $respond-min-hgalign) {
+      left: $left-gutter-width;
+    }
+
+    font-size: 11px;
+    white-space: nowrap;
 
     @include nm-low-opacity;
 
@@ -1479,15 +1550,8 @@ div.content[role=main] {
   @include reset-box;
   @include focus-bg;
   padding: $sidebar-padding;
-  padding-right: 0px;
-  float: none;
-  position: relative;
-  width: auto;
   z-index: 100;
   @include main-box-shadow;
-
-  // Prevent floating content from escaping.
-  overflow: hidden;
 
   > div.commentarea {
     @include focus-box;
@@ -1541,6 +1605,8 @@ div.content[role=main] {
       padding: $sidebar-padding;
       margin: 0px;
       margin-bottom: -1px;
+      /* limit width by right floating sidebar. */
+      overflow: hidden;
 
       > .rank {
         // Hide link rank. For 99% of users this information is useless.
@@ -1666,6 +1732,7 @@ div.content[role=main] {
     @include reset-box;
     @include focus-box;
     padding: $sidebar-padding;
+    overflow: hidden;
 
     ul.tabmenu {
       font-size: 0px;
@@ -1748,6 +1815,7 @@ div.content[role=main] {
       width: 100%;
       @include focus-box;
       @include focus-fill2;
+      @include border-box;
       border-bottom-width: 0px;
 
       .spacer:first-child {
@@ -1770,6 +1838,7 @@ div.content[role=main] {
         @include reset-box;
         @include focus-box;
         @include focus-fill2;
+        @include border-box;
         padding: $sidebar-padding;
         max-width: $submit-width;
         width: 100%;
@@ -1787,6 +1856,7 @@ div.content[role=main] {
           @include reset-box;
           @include focus-box;
           @include focus-fill2;
+          @include border-box;
           padding: $sidebar-padding;
           display: block;
           border-top-width: 0px;
