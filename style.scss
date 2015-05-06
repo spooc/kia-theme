@@ -1867,6 +1867,17 @@ div.content[role=main] {
         }
       }
 
+      div.spacer:nth-of-type(2):before {
+        content: 'Off-topic posts should be submitted as a Text/self post accompanied by a short description';
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 16px;
+      }
+
+      #title-field {
+        margin-top: .5em;
+      }
+
       // Remove pointless "options" title above checkbox.
       .spacer:last-child span.title {
         display: none;
