@@ -945,6 +945,7 @@ body {
   html[lang*='nm'] & {
     background-image: none;
     background-color: #000;
+    color: nm_darken($color-focus-fill);
   }
 }
 
