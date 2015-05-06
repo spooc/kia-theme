@@ -560,6 +560,7 @@ $btn-padding: 12px;
     }
     &[title=CENSORSHIP] {
       @include std-link-flair($tag_color_censorship);
+      text-decoration: line-through;
     }
   }
 }
