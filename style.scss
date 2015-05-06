@@ -1444,6 +1444,14 @@ div.side div.md {
         a[href$=cs] {
           @include std-link-flair($tag_color_censorship);
         }
+
+        html[lang*='nm'] & {
+          a {
+            color: nm_darken($color-focus-fill) !important;
+            opacity: 1;
+          }
+        }
+
       }
       > li:nth-child(2) {
         border-radius: 4px 4px 0px 0px;
