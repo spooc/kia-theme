@@ -1065,6 +1065,11 @@ div.side {
       }
     }
 
+    // RES stuff needs 1px padding to be perfect.
+    div[data-res-css], .subButtons {
+      padding-left: 1px;
+    }
+
     .subButtons {
       html.res & {
         padding-top: .5em;
@@ -1073,7 +1078,7 @@ div.side {
 
     .subscribers {
       html.res & {
-        margin-top: .75em;
+        margin-top: 1em;
       }
     }
 
