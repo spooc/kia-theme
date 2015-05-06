@@ -1028,6 +1028,10 @@ div.side {
       }
       #searchexpando {
         @include focus-box;
+
+        label:nth-of-type(2), label:nth-of-type(3) {
+          display: none;
+        }
       }
 
       // Move into header on larger screens.
