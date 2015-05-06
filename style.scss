@@ -554,6 +554,9 @@ $btn-padding: 12px;
     }
     &[title=SOCJUS] {
       @include std-link-flair($tag_color_socjus);
+      html[lang*='nm'] & {
+        color: black;
+      }
     }
     &[title=CENSORSHIP] {
       @include std-link-flair($tag_color_censorship);
@@ -1461,6 +1464,9 @@ div.side div.md {
         }
         a[href$=sj] {
           @include std-link-flair($tag_color_socjus);
+          html[lang*='nm'] & {
+            color: black !important;
+          }
         }
         a[href$=cs] {
           @include std-link-flair($tag_color_censorship);
