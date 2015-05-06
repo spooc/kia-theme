@@ -24,6 +24,7 @@ $asset_icon_main_rising: asset_url('icon-main-rising', 'png');
 $asset_icon_main_top: asset_url('icon-main-top', 'png');
 $asset_logo: asset_url('logo', 'png');
 $asset_texture: asset_url('texture', 'png');
+$asset_toolbox_edit: asset_url('toolbox-edit', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
 $asset_vivian_night: asset_url('vivian-night', 'png');
 $asset_vote_up: asset_url('vote-up', 'png');
@@ -1302,6 +1303,20 @@ div.side {
           margin-right: -16px;
           left: 0px;
         }
+      }
+
+      img {
+        display: none;
+      }
+
+      .toolbox-edit:before {
+        background-image: url($asset_toolbox_edit);
+        height: 16px;
+        width: 16px;
+        display: block;
+        content: " ";
+        float: left;
+        margin-right: 5px;
       }
     }
   }
