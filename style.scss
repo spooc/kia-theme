@@ -91,8 +91,8 @@ $tabmenu-tag-filter-btn-width: 105px; // First button in tabmenu.
 
 // ********* Media queries. ********* //
 
-$respond-min-hgalign: 805px; // 1. Below this screen size and we stop gutter aligning header.
-$respond-min-sidelvl: 740px; // 2. Below this screen size we disable the sidebar injecting
+$respond-min-hgalign: 920px; // 1. Below this screen size and we stop gutter aligning header.
+$respond-min-sidelvl: 860px; // 2. Below this screen size we disable the sidebar injecting
                              //    itself upwards and position search in header.
 $respond-min-sidebar: 600px; // 3. Below this screen size we cannot have a sidebar anymore.
 
@@ -861,41 +861,9 @@ html {
       @extend a:active;
     }
     body.listing-page &, body.wiki-page & {
-      li:nth-child(1) {
-        a {
-          @include icon-tabmenu($asset_icon_main_hot);
-        }
-        @include tooltip('Display hot (popular) links.');
-      }
-      li:nth-child(2) {
-        a {
-          @include icon-tabmenu($asset_icon_main_new);
-        }
-        @include tooltip('Display new links. Support /r/KotakuInAction by selecting the next featured content.');
-      }
-      li:nth-child(3) {
-        a {
-          @include icon-tabmenu($asset_icon_main_rising);
-        }
-        @include tooltip('Display rising links.');
-      }
-      li:nth-child(4) {
-        a {
-          @include icon-tabmenu($asset_icon_main_top);
-        }
-        @include tooltip('Display top links.');
-      }
-      li:nth-child(5) {
-        a {
-          @include icon-tabmenu($asset_icon_main_cntrv);
-        }
-        @include tooltip('Display controversial links.');
-      }
-      li:nth-child(6) {
-        a {
-          @include icon-tabmenu($asset_icon_main_glided);
-        }
-        @include tooltip('Display glided comments.');
+      li a {
+        padding-left: 4px;
+        padding-right: 4px;
       }
       // Wiki
       li:nth-child(7) {
