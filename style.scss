@@ -1987,6 +1987,11 @@ body::after {
 
 // ********* HACKS. ********* //
 
+// Hack that fix flair overflow in sidebar changing size of body on iphone.
+div.side ul.content {
+  overflow:hidden;
+}
+
 /* Special Flairs and Shit */
 .commentarea .author:after{color:#0D0D0D}
 .commentarea .author[href$="/user/TheHat2"]:after{content:" [Hatman]"}
