@@ -945,7 +945,7 @@ body {
   background-image: url($asset_texture);
   background-repeat: repeat;
   background-color: #151515;
-  background-size: 40%;
+  background-size: 700px auto;
 
   html[lang*='nm'] & {
     background-image: none;
@@ -1567,6 +1567,12 @@ div.side div.md {
       color: #fff;
       font-weight: normal;
     }
+
+    // Allow #new-highlight markers to draw attention to new links we want to "sticky".
+    a[href$='#new-highlight'] {
+      color: #5cff5c !important;
+      text-decoration: underline;
+    }
   }
 
   // #4: Blockquote divider.
@@ -1987,3 +1993,9 @@ body::after {
   z-index: -10000;
   @include box-shadow(0px, 0px, 150px, 20px, rgba(0, 0, 0, 0.5));
 }
+
+// ********* HACKS. ********* //
+
+/* Special Flairs and Shit */
+.commentarea .author:after{color:#0D0D0D}
+.commentarea .author[href$="/user/TheHat2"]:after{content:" [Hatman]"}
