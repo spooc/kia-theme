@@ -38,6 +38,8 @@ $font-size-blur: 10px;    // Small font size for text that should not be in focu
                           // and is very likely to not be interesting for user.
 $font-size-btn: 14px;     // Button font sizes.
 
+$font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
 // ********* Color configuration. ********* //
 $color-focus-fill: #fff;
 $color-focus-fill2: #f8f8f8;
@@ -904,13 +906,19 @@ html {
   letter-spacing: 0px !important;
 }
 
+input, textarea, keygen, select, button,  {
+  font-family: $font-family;
+}
+
+input, textarea {
+  font-size: 14px !important;
+}
+
 body {
   // Prevent absolute positioning from leaking to the window.
   position: relative;
 
-  // Default reddit font (Verdana) makes your eyes bleed.
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
+  font-family: $font-family;
   font-size: $font-size-focus;
   line-height: normal;
   color: $color-focus-fg;
@@ -1035,7 +1043,7 @@ div.side {
       margin-bottom: $sidebar-padding;
 
       a {
-        @include btn-primary;
+        @include btn-success;
         @include big-sidebar-btn;
         font-size: $font-size-btn;
 
@@ -1109,10 +1117,13 @@ div.side {
         margin: 0px;
         margin-bottom: $sidebar-padding;
 
-        > a.add {
-          @include btn-success;
+        > a.add, > a.remove {
+          @include btn-primary;
           @include big-sidebar-btn;
           font-size: 0px;
+        }
+
+        > a.add {
           display: block;
 
           &::before {
@@ -1125,9 +1136,6 @@ div.side {
           }
         }
         > a.remove {
-          @include btn-default;
-          @include big-sidebar-btn;
-          font-size: 0px;
           display: none;
 
           &::before {
