@@ -23,6 +23,8 @@ $asset_icon_main_new: asset_url('icon-main-new', 'png');
 $asset_icon_main_rising: asset_url('icon-main-rising', 'png');
 $asset_icon_main_top: asset_url('icon-main-top', 'png');
 $asset_logo: asset_url('logo', 'png');
+$asset_mars_top: asset_url('mars-top', 'png');
+$asset_mars_btm: asset_url('mars-btm', 'jpg');
 $asset_texture: asset_url('texture', 'png');
 $asset_toolbox_edit: asset_url('toolbox-edit', 'png');
 $asset_vivian_search: asset_url('vivian-search', 'png');
@@ -237,10 +239,14 @@ $side_header_font_size: 16px;
   }
 }
 
-@mixin nm-low-opacity {
+@mixin nm-opacity($opacity) {
   html[lang*='nm'] & {
-    opacity: $nm-general-opacity;
+    opacity: $opacity;
   }
+}
+
+@mixin nm-low-opacity {
+  @include nm-opacity($nm-general-opacity);
 }
 
 // Mixin for reddit site content.
@@ -1947,6 +1953,35 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
     div.col {
       @include blur;
     }
+  }
+}
+
+body > p.debuginfo {
+  &::before {
+    position: absolute;
+    display: block;
+    right: 0px;
+    left: 0px;
+    bottom: -100px;
+    height: 150px;
+    background-image: url($asset-mars-top);
+    background-position: top center;
+    z-index: -10000;
+    content: '';
+    @include nm-opacity($nm-general-opacity / 2);
+  }
+  &::after {
+    position: absolute;
+    display: block;
+    right: 0px;
+    left: 0px;
+    bottom: -350px;
+    height: 250px;
+    background-image: url($asset-mars-btm);
+    background-position: top center;
+    z-index: -10000;
+    content: '';
+    @include nm-opacity($nm-general-opacity / 2);
   }
 }
 
