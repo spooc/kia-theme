@@ -92,6 +92,7 @@ $tabmenu-height: ($tabmenu-pad + $tabmenu-inner-height + $tabmenu-pad);
 $tabmenu-min-width: ($full_min_width - $sidebar-width);
 $tabmenu-tag-filter-btn-width: 105px; // First button in tabmenu.
 
+$res-navtop-right: 90px;
 
 // ********* Media queries. ********* //
 
@@ -899,6 +900,15 @@ html {
   }
   border-style: solid;
   border-width: 0px 0px 0px 1px;
+  // In res the element is too fat to keep in top so we move it down to the left of the logo.
+  &.res-navTop {
+    right: $res-navtop-right;
+    top: $srarea-height;
+  }
+}
+
+#RESPrefsDropdown {
+  right: $res-navtop-right !important;
 }
 
 * {
@@ -1015,7 +1025,6 @@ div.side {
           display: none;
         }
       }
-
       // Move into header on larger screens.
       @media only screen and (min-width: $respond-min-sidelvl) {
         $search-width: 220px;
@@ -1029,6 +1038,11 @@ div.side {
         input[type=text] {
           width: $search-width;
         }
+      }
+
+      // Move search down slightly on res to avoid navtop collision.
+      body.res & {
+        margin-top: 5px;
       }
     }
 
