@@ -1052,7 +1052,7 @@ div.side {
         top: ($sidebar-top / 2) - 10px;
         right: ($sidebar-inner-width + $sidebar-padding - $search-width);
         padding-left: 20px;
-        z-index: 1000;
+        z-index: 10000;
 
         input[type=text] {
           width: $search-width;
