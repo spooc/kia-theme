@@ -23,6 +23,7 @@ $asset_icon_main_new: asset_url('icon-main-new', 'png');
 $asset_icon_main_rising: asset_url('icon-main-rising', 'png');
 $asset_icon_main_top: asset_url('icon-main-top', 'png');
 $asset_logo: asset_url('logo', 'png');
+$asset_logo_sr: asset_url('logo-sr', 'png');
 $asset_mars_top: asset_url('mars-top', 'png');
 $asset_mars_btm: asset_url('mars-btm', 'jpg');
 $asset_texture: asset_url('texture', 'png');
@@ -764,11 +765,15 @@ html {
   // The header pushes the main content and sidebar down under the tabmenu with bottom margin.
   // The reason why the height is not used is because it would otherwise cover the search field.
   // The sidebar is then pushed up the same distance with the magic of negative margins
-  // to place itself to the right of the tabmenu.
-  margin-bottom: $sidebar-top + $tabmenu-height;
+  // to place itself to the right of the tabmenu. Technically we use padding
+  // in favor of margin because it will allow us to use `overflow: hidden` for
+  // artistic logo placement.
+  padding-bottom: $sidebar-top + $tabmenu-height;
   height: 0px;
+  overflow: hidden;
+
   // Fixes sr dropdown under filter by tag, etc.
-  z-index: 10000;
+  z-index: 1000;
 
   #sr-header-area {
     @include reddit-srarea;
@@ -778,8 +783,8 @@ html {
     div.sr-list, div.srdrop span {
       line-height: $srarea-height;
     }
-    
-    
+
+
     opacity: 0.3;
     &:hover {
       opacity: 1;
@@ -792,28 +797,33 @@ html {
   // field in lower resolutions, so we make it the maximum possible size instead.
   width: ($tabmenu-min-width - $left-gutter-width);
   height: $logoarea-height;
-  margin-left: $left-gutter-width;
   line-height: 0px;
   overflow: hidden;
 
   // Gutter align unless screen is too small.
   margin-left: $sidebar-padding;
   @media only screen and (min-width: $respond-min-hgalign) {
-    margin-left: $left-gutter-width;
+    margin-left: 200px;
   }
 
-  // Hide the element actually intended for the subreddit logo
-  // as it links to reddit front page instead of the subreddit.
-  > #header-img-a, > #header-img {
-    display: none;
+  @at-root #header-img.default-header {
+    background-image: url($asset_logo);
+    background-position: 0 center;
+    background-size: contain;
+    height: 205px;
+    left: 0;
+    position: absolute;
+    text-indent: -9999px;
+    top: 0;
+    vertical-align: bottom;
+    width: 189px;
+    z-index: -1;
   }
 
   // The reddit name element is used for the logo.
   // An logo asset is used instead which should be changed at will, manually.
   > span.redditname {
     @include reset-box;
-    height: $logoarea-height;
-    width: $tabmenu-min-width;
     margin: 0px;
 
     // We hide the text.
@@ -821,8 +831,16 @@ html {
 
     > a {
       @include reset-box;
-      height: $logoarea-height;
-      width: $tabmenu-min-width;
+
+      background-image: url($asset_logo_sr);
+      background-size: cover;
+      height: 64px;
+      width: 256px;
+
+      display: none;
+      @media only screen and (min-width: $respond-min-hgalign) {
+        display: inline-block;
+      }
     }
   }
 
@@ -1349,7 +1367,7 @@ div.side div.md {
   blockquote:nth-child(1) {
     @include reset-box;
     position: absolute;
-    z-index: 1000;
+    z-index: 10000;
     border: none;
     top: ($sidebar-top + $tabmenu-pad);
     width: $tabmenu-tag-filter-btn-width;
@@ -1493,12 +1511,22 @@ div.side div.md {
     left: $left-gutter-width + $logoarea-gutter;
     height: $sidebar-top - $srarea-height;
     top: $srarea-height;
-    
+
+    // Don't cover subreddit logo if it's showing.
+    @media only screen and (min-width: $respond-min-hgalign) {
+      height: 34px;
+      top: 75px;
+    }
+
     h3 {
       display: inline-block;
       position: absolute;
       width: 100%;
       bottom: $sidebar-padding;
+
+      @media only screen and (min-width: $respond-min-hgalign) {
+        bottom: 0;
+      }
     }
 
     // Gutter align unless screen is too small.
@@ -1878,22 +1906,6 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
 
 // Footer
 .footer-parent {
-  // Ethics sealion picture
-  // Placed here for low z-index.
-  &::before {
-    position: absolute;
-    left: $sidebar-padding;
-    top: 0px;
-    width: $tabmenu-min-width;
-    $height: $sidebar-top + $tabmenu-height;
-    height: $height;
-    background-image: url($asset_logo);
-    background-size: auto ($height + 50px);
-    background-repeat: no-repeat;
-    background-position: top left;
-    content: '';
-    z-index: -100;
-  }
 
   // Tabmenu dark stripe.
   // Placed here because not all pages contain a tabmenu.
