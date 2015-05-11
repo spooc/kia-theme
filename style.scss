@@ -74,8 +74,8 @@ $left-gutter-width: 60px; // The left gutter is where the upvotes and downvotes 
                           // This is the first clear "column" in the grid.
 
 $srarea-height: 18px;     // Subreddit area height. The first row.
-$logoarea-height: 75px;   // Logo area height. The second row.
-$logoarea-vpadding: 0px;  // How much vertical paddning there should be around the logo.
+$logoarea-height: 70px;  // Logo area height. The second row.
+$logoarea-gutter: 140px;  // Logo area gutter that makes room for the logo.
 
 $linkbar-height: 24px;    // Linkbar area height. The third row.
 $linkbar-top: ($srarea-height + $logoarea-height);
@@ -96,11 +96,11 @@ $res-navtop-right: 90px;
 
 // ********* Media queries. ********* //
 
-$respond-min-hgalign: 880px; // 1. Below this screen size and we stop gutter aligning header.
-$respond-min-sidelvl: $respond-min-hgalign - $left-gutter-width + $sidebar_padding;
+$respond-min-hgalign: 880px + $logoarea-gutter; // 1. Below this screen size and we stop gutter aligning header.
+$respond-min-sidelvl: $respond-min-hgalign - $left-gutter-width - $logoarea-gutter + $sidebar_padding;
                              // 2. Below this screen size we disable the sidebar injecting
                              //    itself upwards and position search in header.
-$respond-min-sidebar: 600px; // 3. Below this screen size we cannot have a sidebar anymore.
+$respond-min-sidebar: 540px; // 3. Below this screen size we cannot have a sidebar anymore.
 
 $mexpr-phone: "only screen and (min-device-width: 320px) and (max-device-width: 480px)";
 $mexpr-not-phone: "(min-device-width: 481px)";
@@ -778,6 +778,12 @@ html {
     div.sr-list, div.srdrop span {
       line-height: $srarea-height;
     }
+    
+    
+    opacity: 0.3;
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -817,14 +823,6 @@ html {
       @include reset-box;
       height: $logoarea-height;
       width: $tabmenu-min-width;
-
-      // Show the logo instead. Scale it to a height that fills the entire logo area height.
-      background-image: url($asset_logo);
-      background-repeat: no-repeat;
-      background-position: 0px $logoarea-vpadding;
-      background-size: auto ($logoarea-height - $logoarea-vpadding * 2);
-      background-color: transparent;
-      @include nm-low-opacity;
     }
   }
 
@@ -846,7 +844,7 @@ html {
     // Gutter align unless screen is too small.
     left: $sidebar-padding + $base-left;
     @media only screen and (min-width: $respond-min-hgalign) {
-      left: $left-gutter-width + $base-left;
+      left: $left-gutter-width + $logoarea-gutter + $base-left;
     }
 
     // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
@@ -989,13 +987,14 @@ div.side {
     &::before {
       display: block;
       @include focus-bg;
-      margin-top: -$tabmenu-height - $sidebar-padding;
-      margin-bottom: -$tabmenu-height + $sidebar-padding;
+      $push-dist: $logoarea-height + $linkbar-height + $tabmenu-height;
+      margin-top: -$push-dist - $sidebar-padding;
+      margin-bottom: -$push-dist + $sidebar-padding;
       margin-left: -$sidebar-padding;
       padding-left: $sidebar-padding;
       padding-right: $sidebar-padding;
       width: $sidebar-inner-width;
-      height: $tabmenu-height;
+      height: $push-dist;
       content: '';
     }
   }
@@ -1025,25 +1024,6 @@ div.side {
         label:nth-of-type(2), label:nth-of-type(3) {
           display: none;
         }
-      }
-      // Move into header on larger screens.
-      @media only screen and (min-width: $respond-min-sidelvl) {
-        $search-width: 220px;
-        position: absolute;
-        width: $search-width;
-        top: ($sidebar-top / 2) - 10px;
-        right: ($sidebar-inner-width + $sidebar-padding - $search-width);
-        padding-left: 20px;
-        z-index: 1;
-
-        input[type=text] {
-          width: $search-width;
-        }
-      }
-
-      // Move search down slightly on res to avoid navtop collision.
-      body.res & {
-        margin-top: 5px;
       }
     }
 
@@ -1377,7 +1357,7 @@ div.side div.md {
     // Gutter align unless screen is too small.
     left: $sidebar-padding;
     @media only screen and (min-width: $respond-min-hgalign) {
-      left: $left-gutter-width;
+      left: $left-gutter-width + $logoarea-gutter;
     }
 
     ul {
@@ -1510,19 +1490,24 @@ div.side div.md {
     border: none;
     overflow: hidden;
 
-    height: $linkbar-height;
-    top: $linkbar-top;
-    left: $left-gutter-width;
-    right: 0px;
+    left: $left-gutter-width + $logoarea-gutter;
+    height: $sidebar-top - $srarea-height;
+    top: $srarea-height;
+    
+    h3 {
+      display: inline-block;
+      position: absolute;
+      width: 100%;
+      bottom: $sidebar-padding;
+    }
 
     // Gutter align unless screen is too small.
-    left: $sidebar-padding;
-    @media only screen and (min-width: $respond-min-hgalign) {
-      left: $left-gutter-width;
+    right: 0px;
+    @media only screen and (min-width: $respond-min-sidelvl) {
+      right: $sidebar-width;
     }
 
     font-size: 11px;
-    white-space: nowrap;
 
     @include nm-low-opacity;
 
@@ -1893,22 +1878,21 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
 
 // Footer
 .footer-parent {
-  // Vivian search picture.
+  // Ethics sealion picture
   // Placed here for low z-index.
   &::before {
     position: absolute;
-    width: $sidebar-width;
-    height: $sidebar-top;
-    right: 0px;
+    left: $sidebar-padding;
     top: 0px;
-    background-image: url($asset_vivian_search);
-    background-size: $sidebar-top;
+    width: $tabmenu-min-width;
+    $height: $sidebar-top + $tabmenu-height;
+    height: $height;
+    background-image: url($asset_logo);
+    background-size: auto ($height + 50px);
     background-repeat: no-repeat;
-    background-position: bottom right;
+    background-position: top left;
     content: '';
-    .res-nightmode & {
-      background-image: url($asset_vivian_night);
-    }
+    z-index: -100;
   }
 
   // Tabmenu dark stripe.
@@ -1917,15 +1901,16 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
     position: absolute;
     display: block;
     background-color: #000;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     top: $sidebar-top;
     right: 0px;
-    left: 0px;
+    left: $left-gutter-width + $logoarea-gutter - $tabmenu-padding;
     height: $tabmenu-height;
     margin: 0px;
     padding: 0px;
     content: '';
     z-index: -1;
+    border-radius: 0px 0px 0px $sidebar-padding;
     .res-nightmode & {
       background-color: rgba(255, 255, 255, 0.1);
     }
