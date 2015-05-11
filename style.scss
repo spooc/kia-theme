@@ -73,7 +73,7 @@ $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
 $left-gutter-width: 60px; // The left gutter is where the upvotes and downvotes are.
                           // This is the first clear "column" in the grid.
 
-$srarea-height: 18px;     // Subreddit area height. The first row.
+$srarea-height: 19px;     // Subreddit area height. The first row.
 $logoarea-height: 75px;   // Logo area height. The second row.
 $logoarea-vpadding: 0px;  // How much vertical paddning there should be around the logo.
 
@@ -905,6 +905,14 @@ html {
   &.res-navTop {
     right: $res-navtop-right;
     top: $srarea-height;
+
+    .res-nightmode & {
+      background-color: $color-focus-fg;
+
+      #userbarToggle {
+        background-color: $color-focus-fg;
+      }
+    }
   }
 }
 
