@@ -840,6 +840,8 @@ html {
   }
 
   @at-root #header-img.default-header {
+    @include nm-low-opacity;
+
     background-image: url($asset_logo);
     background-position: 0 center;
     background-size: contain;
@@ -856,6 +858,7 @@ html {
   // The reddit name element is used for the logo.
   // An logo asset is used instead which should be changed at will, manually.
   > span.redditname {
+    @include nm-low-opacity;
     @include reset-box;
     margin: 0px;
 
