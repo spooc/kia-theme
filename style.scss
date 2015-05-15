@@ -1006,7 +1006,6 @@ div.side {
       display: block;
       @include focus-bg;
       $push-dist: $logoarea-height + $linkbar-height + $tabmenu-height;
-      margin-top: -$push-dist - $sidebar-padding;
       margin-bottom: -$push-dist + $sidebar-padding;
       margin-left: -$sidebar-padding;
       padding-left: $sidebar-padding;
@@ -1042,6 +1041,26 @@ div.side {
         label:nth-of-type(2), label:nth-of-type(3) {
           display: none;
         }
+      }
+
+      // Move into header on larger screens.
+      @media only screen and (min-width: $respond-min-sidelvl) {
+        $search-width: 220px;
+        position: absolute;
+        width: $search-width;
+        top: ($sidebar-top / 2) - 10px;
+        right: ($sidebar-inner-width + $sidebar-padding - $search-width);
+        padding-left: 20px;
+        z-index: 1000;
+
+        input[type=text] {
+          width: $search-width;
+        }
+      }
+
+      // Move search down slightly on res to avoid navtop collision.
+      body.res & {
+        margin-top: 5px;
       }
     }
 
@@ -1906,6 +1925,25 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
 
 // Footer
 .footer-parent {
+
+  @media only screen and (min-width: $respond-min-sidelvl) {
+    // Vivian search picture.
+    &::before {
+      position: absolute;
+      width: $sidebar-width;
+      height: $sidebar-top;
+      right: 0px;
+      top: 0px;
+      background-image: url($asset_vivian_search);
+      background-size: $sidebar-top;
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      content: '';
+      .res-nightmode & {
+        background-image: url($asset_vivian_night);
+      }
+    }
+  }
 
   // Tabmenu dark stripe.
   // Placed here because not all pages contain a tabmenu.
