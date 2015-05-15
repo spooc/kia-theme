@@ -843,7 +843,7 @@ html {
     @include nm-low-opacity;
 
     background-image: url($asset_logo);
-    background-position: 0 center;
+    background-position: 0 20px;
     background-size: contain;
     height: 205px;
     left: 0;
