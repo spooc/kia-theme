@@ -1768,13 +1768,15 @@ div.content[role=main] {
       textarea {
         @include focus-box;
         @include form-field-box;
+
         background-image: url($asset_comment);
-        background-repeat: no-repeat;
-        background-size: auto 100px;
-        background-position: bottom left;
         .res-nightmode & {
           background-image: url($asset_comment_nm);
         }
+
+        background-repeat: no-repeat;
+        background-size: auto 100px;
+        background-position: bottom left;
         &:focus {
           background-image: none !important;
         }
