@@ -666,6 +666,7 @@ div.thing {
     // Make action list much more compact.
     > ul.flat-list {
       font-size: 0px;
+
       li {
         padding: 0px;
         @include font-blur;
@@ -686,6 +687,34 @@ div.thing {
       // Highlight reply link.
       a[onclick^='return reply'] {
         @include font-focus;
+      }
+
+      li.reported-stamp, a.pretty-button {
+        border-radius: 0;
+        color: black !important; // !important for RES
+        margin: 0 .25em;
+        padding: .125em 0.5em;
+      }
+
+      ul.report-reasons {
+        border-radius: 0;
+
+        li.report-reason-title {
+          color: black;
+          text-transform: uppercase;
+          font-size: 14px;
+          padding: .25em;
+          margin: .25em;
+          font-weight: bold;
+        }
+
+        li.report-reason {
+          color: black;
+          padding: 0 .25em 1em;
+          margin: 0 0 0 2em;
+          font-size: 14px;
+        }
+
       }
     }
   }
