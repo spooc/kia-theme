@@ -565,7 +565,10 @@ $btn-padding: 12px;
     }
     .linkflair-socjus & {
       @include std-link-flair($tag_color_socjus);
-      color: black;
+      color: black !important;
+      .res-nightmode & {
+        color: black !important;
+      }
     }
     .linkflair-censorship & {
       @include std-link-flair($tag_color_censorship);
