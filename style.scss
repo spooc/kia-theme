@@ -955,15 +955,15 @@ html {
   border-width: 0px 0px 0px 1px;
   // In res the element is too fat to keep in top so we move it down to the left of the logo.
   &.res-navTop {
+    border: none;
     right: $res-navtop-right;
     top: $srarea-height;
 
-    .res-nightmode & {
-      background-color: $color-focus-fg;
+    background-color: transparent;
 
-      #userbarToggle {
-        background-color: $color-focus-fg;
-      }
+    #userbarToggle {
+      background-color: transparent;
+      border-right: 1px solid #555;
     }
   }
 }
