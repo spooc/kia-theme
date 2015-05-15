@@ -66,8 +66,8 @@ $nm-darken-factor: 100% - $nm-brightness;
   @return darken($color, $nm-darken-factor * ($factor / 100%));
 }
 
-$nm-link-color: #90e8da;
-$nm-link-color-visited: #dd90ef;
+$nm-link-color: lighten(#14ce1a, $nm-darken-factor);
+$nm-link-color-visited: lighten(#d803ff, $nm-darken-factor * .75);
 
 // ********* Size configuration. ********* //
 $full_min_width: 800px;   // Minimum width screen we support without scrollbar.
@@ -565,9 +565,7 @@ $btn-padding: 12px;
     }
     &[title=SOCJUS] {
       @include std-link-flair($tag_color_socjus);
-      .res-nightmode & {
-        color: black;
-      }
+      color: black;
     }
     &[title=CENSORSHIP] {
       @include std-link-flair($tag_color_censorship);
@@ -760,7 +758,10 @@ html {
 
 // Header image and area.
 #header {
-  background-color: transparent;
+
+  // !important for RES.
+  background-color: transparent !important;
+
   border: none;
   // The header pushes the main content and sidebar down under the tabmenu with bottom margin.
   // The reason why the height is not used is because it would otherwise cover the search field.
@@ -1635,6 +1636,12 @@ div.content[role=main] {
     background-color: transparent;
     margin: 0px;
     padding: 0px;
+  }
+
+  .res-nightmode & .flair {
+    background-color: transparent;
+    border: 1px solid black;
+    color: nm_darken($color-focus-fill);
   }
 
   > div#siteTable {
