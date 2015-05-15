@@ -515,59 +515,59 @@ $btn-padding: 12px;
     position: relative;
     top: .3em;
 
-    &[title=UNVERIFIED] {
+    .linkflair-unverified & {
       @include std-link-flair($tag_color_unverified);
     }
-    &[title=RUMOR] {
+    .linkflair-rumor & {
       @include std-link-flair($tag_color_rumor);
     }
-    &[title=VERIFIED] {
+    .linkflair-verified & {
       @include std-link-flair($tag_color_verified);
     }
-    &[title=PEOPLE] {
+    .linkflair-people & {
       @include std-link-flair($tag_color_people);
     }
-    &[title=HAPPENINGS] {
+    .linkflair-happenings & {
       @include std-link-flair($tag_color_happenings);
     }
-    &[title=IDEAS] {
+    .linkflair-ideas & {
       @include std-link-flair($tag_color_ideas);
     }
-    &[title=GOAL] {
+    .linkflair-goal & {
       @include std-link-flair($tag_color_goal);
     }
-    &[title=EDITORIAL] {
+    .linkflair-editorial & {
       @include std-link-flair($tag_color_editorial);
     }
-    &[title=META] {
+    .linkflair-meta & {
       @include std-link-flair($tag_color_meta);
     }
-    &[title=DRAMA] {
+    .linkflair-drama & {
       @include std-link-flair($tag_color_drama);
     }
-    &[title=HUMOR] {
+    .linkflair-humor & {
       @include std-link-flair($tag_color_humor);
     }
-    &[title=SHOWERTHOUGHT] {
+    .linkflair-showerthought & {
       @include showerthought-flair;
     }
-    &[title=DISCUSSION] {
+    .linkflair-discussion & {
       @include std-link-flair($tag_color_discussion);
     }
-    &[title=OFF-TOPIC] {
+    .linkflair-off-topic & {
       @include std-link-flair($tag_color_off_topic);
     }
-    &[title=ETHICS] {
+    .linkflair-ethics & {
       @include std-link-flair($tag_color_ethics);
     }
-    &[title=INDUSTRY] {
+    .linkflair-industry & {
       @include std-link-flair($tag_color_industry);
     }
-    &[title=SOCJUS] {
+    .linkflair-socjus & {
       @include std-link-flair($tag_color_socjus);
       color: black;
     }
-    &[title=CENSORSHIP] {
+    .linkflair-censorship & {
       @include std-link-flair($tag_color_censorship);
       text-decoration: line-through;
     }
