@@ -97,9 +97,8 @@ $res-navtop-right: 90px;
 
 // ********* Media queries. ********* //
 
-$respond-min-hgalign: 880px + $logoarea-gutter; // 1. Below this screen size and we stop gutter aligning header.
-$respond-min-sidelvl: $respond-min-hgalign - $left-gutter-width - $logoarea-gutter + $sidebar_padding;
-                             // 2. Below this screen size we disable the sidebar injecting
+$respond-min-hgalign: 700px; // 1. Below this screen size and we stop gutter aligning header.
+$respond-min-sidelvl: 800px; // 2. Below this screen size we disable the sidebar injecting
                              //    itself upwards and position search in header.
 $respond-min-sidebar: 540px; // 3. Below this screen size we cannot have a sidebar anymore.
 
@@ -790,6 +789,17 @@ html {
 
 // Header image and area.
 #header {
+  // Background texture.
+  background-image: url($asset_texture);
+  background-repeat: repeat;
+  background-color: #151515;
+  background-size: 700px auto;
+
+  .res-nightmode & {
+    background-image: none;
+    background-color: #000;
+    color: nm_darken($color-focus-fill);
+  }
 
   // !important for RES.
   background-color: transparent !important;
@@ -803,24 +813,42 @@ html {
   // artistic logo placement.
   padding-bottom: $sidebar-top + $tabmenu-height;
   height: 0px;
-  overflow: hidden;
 
   // Fixes sr dropdown under filter by tag, etc.
   z-index: 1000;
 
   #sr-header-area {
     @include reddit-srarea;
+
     a, span {
       @include reddit-srarea;
     }
     div.sr-list, div.srdrop span {
       line-height: $srarea-height;
     }
+  }
 
+  @media only screen and (min-width: $respond-min-sidelvl) {
+    // Vivian search picture.
+    &::before {
+      position: absolute;
+      width: $sidebar-width;
+      height: $sidebar-top;
+      right: 0px;
+      top: 0px;
+      background-image: url($asset_vivian_search);
+      background-size: $sidebar-top;
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      content: '';
+      .res-nightmode & {
+        background-image: url($asset_vivian_night);
+      }
 
-    opacity: 0.3;
-    &:hover {
-      opacity: 1;
+      body.submit-page & {
+        // This page has no tabmenu and can therfore not cut off vivian.
+        display: none;
+      }
     }
   }
 }
@@ -833,26 +861,23 @@ html {
   line-height: 0px;
   overflow: hidden;
 
-  // Gutter align unless screen is too small.
-  margin-left: $sidebar-padding;
-  @media only screen and (min-width: $respond-min-hgalign) {
-    margin-left: 200px;
-  }
+  // Gutter align.
+  margin-left: 200px;
 
   @at-root #header-img.default-header {
+    @include reset-box;
     @include nm-low-opacity;
 
     background-image: url($asset_logo);
-    background-position: 0 16px;
-    background-size: contain;
-    height: 205px;
-    left: 0;
+    background-position: 0px 12px;
+    background-size: 100% auto;
     position: absolute;
-    text-indent: -9999px;
-    top: 0;
-    vertical-align: bottom;
-    width: 189px;
-    z-index: -1;
+    top: 5px;
+    left: 2px;
+    height: $sidebar-top + $tabmenu-height - 5px;
+    width: ($left-gutter-width + $logoarea-gutter - 10px);
+    font-size: 0px;
+    z-index: -2;
   }
 
   // The reddit name element is used for the logo.
@@ -873,10 +898,7 @@ html {
       height: 64px;
       width: 256px;
 
-      display: none;
-      @media only screen and (min-width: $respond-min-hgalign) {
-        display: inline-block;
-      }
+      display: block;
     }
   }
 
@@ -887,18 +909,27 @@ html {
     display: block;
     background-color: transparent;
     top: $sidebar-top;
-    right: $sidebar-width;
+    right: 0px;
     // Leave room on the left for the filter button.
     // We place the filter button on the left so new buttons can be added here by RES.
     $base-left: ($tabmenu-tag-filter-btn-width + $tabmenu-cat-margin - $tabmenu-pad);
     height: $tabmenu-inner-height;
     margin: 0px;
     padding: $tabmenu-pad;
+    padding-left: $base-left;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    .res-nightmode & {
+      background-color: #000;
+    }
 
     // Gutter align unless screen is too small.
-    left: $sidebar-padding + $base-left;
+    border-radius: 0px;
+    left: $sidebar-padding;
     @media only screen and (min-width: $respond-min-hgalign) {
-      left: $left-gutter-width + $logoarea-gutter + $base-left;
+      border-radius: 8px 0px 0px 0px;
+      left: $left-gutter-width + $logoarea-gutter - $tabmenu-pad;
     }
 
     // It's tempting to use overflow hidden here to prevent tabmenu content from leaking if too many
@@ -945,14 +976,14 @@ html {
   @include reset-box;
   position: absolute;
   top: 0px;
-  height: $srarea-height;
+  height: $srarea-height - 1px;
   padding: 0px 4px 0px 4px;
   @include reddit-srarea;
   a, span {
     @include reddit-srarea;
   }
   border-style: solid;
-  border-width: 0px 0px 0px 1px;
+  border-width: 0px 0px 1px 1px;
   // In res the element is too fat to keep in top so we move it down to the left of the logo.
   &.res-navTop {
     border: none;
@@ -993,18 +1024,6 @@ body {
   font-size: $font-size-focus;
   line-height: normal;
   color: $color-focus-fg;
-
-  // Background texture.
-  background-image: url($asset_texture);
-  background-repeat: repeat;
-  background-color: #151515;
-  background-size: 700px auto;
-
-  .res-nightmode & {
-    background-image: none;
-    background-color: #000;
-    color: nm_darken($color-focus-fill);
-  }
 }
 
 div.side {
@@ -1042,24 +1061,6 @@ div.side {
     color: $side_header_color;
   }
 
-  // We utilize the first spacer to move sidebar into header since
-  // this is a waste of space otherwise and it helps clip Vivian.
-  // We can however only do this on screens that are large enough.
-  @media only screen and (min-width: $respond-min-sidelvl) {
-    &::before {
-      display: block;
-      @include focus-bg;
-      $push-dist: $logoarea-height + $linkbar-height + $tabmenu-height;
-      margin-bottom: -$push-dist + $sidebar-padding;
-      margin-left: -$sidebar-padding;
-      padding-left: $sidebar-padding;
-      padding-right: $sidebar-padding;
-      width: $sidebar-inner-width;
-      height: $push-dist;
-      content: '';
-    }
-  }
-
   // Style for sidebar spacers and the content inside those spacers.
   // The content of spacers varies depending on page/user etc and the order
   // cannot be trusted, but we try to list the style rules for spacers in
@@ -1092,7 +1093,7 @@ div.side {
         $search-width: 220px;
         position: absolute;
         width: $search-width;
-        top: ($sidebar-top / 2) - 10px;
+        top: ($sidebar-top / 2) - 20px;
         right: ($sidebar-inner-width + $sidebar-padding - $search-width);
         padding-left: 20px;
         z-index: 10000;
@@ -1319,12 +1320,6 @@ div.side {
           margin-bottom: $sidebar-padding;
         }
       }
-    }
-
-    // The second last sidebar content should always be "RECENTLY VIEWED LINKS".
-    // Remove it as almost nobody is interested in it and it's just more clutter.
-    &:nth-last-child(2) {
-      display: none;
     }
   }
 
@@ -1574,6 +1569,7 @@ div.side div.md {
     left: $left-gutter-width + $logoarea-gutter;
     height: $sidebar-top - $srarea-height;
     top: $srarea-height;
+    right: 0px;
 
     // Don't cover subreddit logo if it's showing.
     @media only screen and (min-width: $respond-min-hgalign) {
@@ -1585,17 +1581,12 @@ div.side div.md {
       display: inline-block;
       position: absolute;
       width: 100%;
+      max-height: 36px;
       bottom: $sidebar-padding;
 
       @media only screen and (min-width: $respond-min-hgalign) {
         bottom: 0;
       }
-    }
-
-    // Gutter align unless screen is too small.
-    right: 0px;
-    @media only screen and (min-width: $respond-min-sidelvl) {
-      right: $sidebar-width;
     }
 
     font-size: 11px;
@@ -1636,7 +1627,6 @@ div.content[role=main] {
   @include focus-bg;
   padding: $sidebar-padding;
   z-index: 100;
-  @include main-box-shadow;
 
   > div.commentarea {
     @include focus-box;
@@ -1977,54 +1967,8 @@ body.submit-page div.side div.usertext-body div.md blockquote:first-child {
 
 // Footer
 .footer-parent {
-
-  @media only screen and (min-width: $respond-min-sidelvl) {
-    // Vivian search picture.
-    &::before {
-      position: absolute;
-      width: $sidebar-width;
-      height: $sidebar-top;
-      right: 0px;
-      top: 0px;
-      background-image: url($asset_vivian_search);
-      background-size: $sidebar-top;
-      background-repeat: no-repeat;
-      background-position: bottom right;
-      content: '';
-      .res-nightmode & {
-        background-image: url($asset_vivian_night);
-      }
-    }
-  }
-
-  // Tabmenu dark stripe.
-  // Placed here because not all pages contain a tabmenu.
-  &::after {
-    position: absolute;
-    display: block;
-    background-color: #000;
-    background-color: rgba(0, 0, 0, 0.3);
-    top: $sidebar-top;
-    right: 0px;
-    left: $left-gutter-width + $logoarea-gutter - $tabmenu-pad;
-    height: $tabmenu-height;
-    margin: 0px;
-    padding: 0px;
-    content: '';
-    z-index: -1;
-    border-radius: 0px 0px 0px $sidebar-padding;
-    .res-nightmode & {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-
   .footer {
-    @include main-box-shadow;
-    @include reddit-site;
     margin-bottom: 50px;
-    a, span {
-      @include reddit-site;
-    }
 
     div.col {
       @include blur;
