@@ -431,7 +431,7 @@ $btn-padding: 12px;
   }
 }
 
-@mixin tooltip($text) {
+@mixin tooltip($text, $left, $top, $width) {
   position: relative;
 
   &:after {
@@ -440,9 +440,10 @@ $btn-padding: 12px;
     padding: 2px;
     display: none;
     position: absolute;
-    top: 105%;
-    left: 25%;
-    width: auto;
+    text-indent: initial;
+    top: $top;
+    left: $left;
+    width: $width;
     color: $color-focus-fg;
     font-size: $font-size-focus;
     line-height: $font-size-focus;
@@ -735,6 +736,11 @@ div.thing {
   }
 }
 
+// Highlight nsfw.
+.nsfw-stamp {
+  color: #f00 !important;
+}
+
 // Reset weird coloring rule in reddit stylesheet.
 .titlebox h1 a {color: #0079d3;}
 
@@ -876,9 +882,12 @@ html {
   // Gutter align.
   margin-left: 200px;
 
-  @at-root #header-img.default-header {
+  // Sometimes reddit insists on giving us custom logos so we need two selectors.
+  @at-root a#header-img.default-header, a#header-img-a {
     @include reset-box;
     @include nm-low-opacity;
+
+    @include tooltip("This is what Kotaku's logo actually used to look like.", 20%, 90%, 80%);
 
     background-image: url($asset_logo);
     background-position: 0px 12px;
@@ -890,6 +899,11 @@ html {
     width: ($left-gutter-width + $logoarea-gutter - 10px);
     font-size: 0px;
     z-index: -2;
+  }
+
+  // Sometimes reddit insists on giving us custom logos, in this case they must be hidden.
+  @at-root img#header-img {
+    display: none;
   }
 
   // The reddit name element is used for the logo.
@@ -2041,6 +2055,6 @@ div.side ul.content {
 .commentarea .author[href$="/user/TheHat2"]:after{content:" [Hatman]"}
 
 // Logo author.
-div.comment .author[href$="/user/Kai_the_creator"] ~ span.flair {
+.author[href$="/user/Kai_the_creator"] ~ span.flair {
   @include gold-flair;
 }
