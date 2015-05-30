@@ -586,6 +586,9 @@ $btn-padding: 12px;
       @include std-link-flair($tag_color_censorship);
       text-decoration: line-through;
     }
+    .linkflair-bias & {
+      @include std-link-flair($tag_color_censorship);
+    }
   }
 }
 
@@ -1554,6 +1557,9 @@ div.side div.md {
           }
         }
         a[href$=cs] {
+          @include std-link-flair($tag_color_censorship);
+        }
+        a[href$=bi] {
           @include std-link-flair($tag_color_censorship);
         }
 
